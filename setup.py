@@ -1,20 +1,15 @@
 #!/usr/bin/env python
 
-"""
-setup.py file for SWIG example
-"""
-
 from distutils.core import setup, Extension
 
+python_libstorj_module = Extension('_python_libstorj',
+                                   sources=['python_libstorj_wrap.cxx', 'python_libstorj.cpp'],
+                                   )
 
-example_module = Extension('_example',
-                           sources=['example_wrap.c', 'example.c'],
-                           )
-
-setup (name = 'example',
-       version = '0.1',
-       author      = "SWIG Docs",
-       description = """Simple swig example from docs""",
-       ext_modules = [example_module],
-       py_modules = ["example"],
-       )
+setup(name='python_libstorj',
+      version='0.0',
+      author="Bryan White <bryanchriswhite@gmail.com>",
+      description="""Python bindings for [libstorj](https://github.com/storj/libstorj)""",
+      ext_modules=[python_libstorj_module],
+      py_modules=["python_libstorj"],
+      )

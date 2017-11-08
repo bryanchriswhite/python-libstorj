@@ -13,12 +13,12 @@ if _swig_python_version_info >= (2, 7, 0):
     def swig_import_helper():
         import importlib
         pkg = __name__.rpartition('.')[0]
-        mname = '.'.join((pkg, '_example')).lstrip('.')
+        mname = '.'.join((pkg, '_python_libstorj')).lstrip('.')
         try:
             return importlib.import_module(mname)
         except ImportError:
-            return importlib.import_module('_example')
-    _example = swig_import_helper()
+            return importlib.import_module('_python_libstorj')
+    _python_libstorj = swig_import_helper()
     del swig_import_helper
 elif _swig_python_version_info >= (2, 6, 0):
     def swig_import_helper():
@@ -26,20 +26,20 @@ elif _swig_python_version_info >= (2, 6, 0):
         import imp
         fp = None
         try:
-            fp, pathname, description = imp.find_module('_example', [dirname(__file__)])
+            fp, pathname, description = imp.find_module('_python_libstorj', [dirname(__file__)])
         except ImportError:
-            import _example
-            return _example
+            import _python_libstorj
+            return _python_libstorj
         if fp is not None:
             try:
-                _mod = imp.load_module('_example', fp, pathname, description)
+                _mod = imp.load_module('_python_libstorj', fp, pathname, description)
             finally:
                 fp.close()
             return _mod
-    _example = swig_import_helper()
+    _python_libstorj = swig_import_helper()
     del swig_import_helper
 else:
-    import _example
+    import _python_libstorj
 del _swig_python_version_info
 try:
     _swig_property = property
@@ -100,12 +100,8 @@ except __builtin__.Exception:
 
 
 def fact(n):
-    return _example.fact(n)
-fact = _example.fact
-
-def storj_mnemonic_check(mnemonic):
-    return _example.storj_mnemonic_check(mnemonic)
-storj_mnemonic_check = _example.storj_mnemonic_check
+    return _python_libstorj.fact(n)
+fact = _python_libstorj.fact
 # This file is compatible with both classic and new-style classes.
 
 
