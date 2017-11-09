@@ -15,7 +15,7 @@ Environment Setup
     ```
 1. Activate your virtualenv
     ```
-    source ./env/bin/activate
+    . env/bin/activate
     ```
 1. Installing project dependencies
     ```
