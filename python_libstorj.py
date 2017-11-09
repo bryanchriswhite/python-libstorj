@@ -99,9 +99,13 @@ except __builtin__.Exception:
     _newclass = 0
 
 
-def fact(n):
-    return _python_libstorj.fact(n)
-fact = _python_libstorj.fact
+def storj_mnemonic_check(mnemonic):
+    return _python_libstorj.storj_mnemonic_check(mnemonic)
+storj_mnemonic_check = _python_libstorj.storj_mnemonic_check
+
+def storj_mnemonic_generate(strength):
+    return _python_libstorj.storj_mnemonic_generate(strength)
+storj_mnemonic_generate = _python_libstorj.storj_mnemonic_generate
 # This file is compatible with both classic and new-style classes.
 
 

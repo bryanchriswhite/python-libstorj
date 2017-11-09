@@ -4,6 +4,7 @@ from distutils.core import setup, Extension
 
 python_libstorj_module = Extension('_python_libstorj',
                                    sources=['python_libstorj_wrap.cxx', 'python_libstorj.cpp'],
+                                   libraries=['storj']
                                    )
 
 setup(name='python_libstorj',
