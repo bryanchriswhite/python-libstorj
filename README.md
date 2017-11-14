@@ -24,11 +24,7 @@ Environment Setup
 
 Build
 ---
-1. Run swig to generate c++/python
-    ```
-    swig -c++ -python ./python_libstorj.i
-    ```
-1. Run setup.py to build shared object
-    ```
-    python ./setup.py build_ext --inplace
-    ```
+Run the build shell script:
+```
+./build.sh
+```

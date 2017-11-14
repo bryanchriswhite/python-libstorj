@@ -188,133 +188,133 @@ STORJ_REPORT_NOT_PREPARED = _python_libstorj.STORJ_REPORT_NOT_PREPARED
 STORJ_REPORT_AWAITING_SEND = _python_libstorj.STORJ_REPORT_AWAITING_SEND
 STORJ_REPORT_SENDING = _python_libstorj.STORJ_REPORT_SENDING
 STORJ_REPORT_SENT = _python_libstorj.STORJ_REPORT_SENT
-class storj_bridge_options_t(_object):
+class BridgeOptions(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, storj_bridge_options_t, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, BridgeOptions, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, storj_bridge_options_t, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, BridgeOptions, name)
     __repr__ = _swig_repr
-    __swig_setmethods__["proto"] = _python_libstorj.storj_bridge_options_t_proto_set
-    __swig_getmethods__["proto"] = _python_libstorj.storj_bridge_options_t_proto_get
+    __swig_setmethods__["proto"] = _python_libstorj.BridgeOptions_proto_set
+    __swig_getmethods__["proto"] = _python_libstorj.BridgeOptions_proto_get
     if _newclass:
-        proto = _swig_property(_python_libstorj.storj_bridge_options_t_proto_get, _python_libstorj.storj_bridge_options_t_proto_set)
-    __swig_setmethods__["host"] = _python_libstorj.storj_bridge_options_t_host_set
-    __swig_getmethods__["host"] = _python_libstorj.storj_bridge_options_t_host_get
+        proto = _swig_property(_python_libstorj.BridgeOptions_proto_get, _python_libstorj.BridgeOptions_proto_set)
+    __swig_setmethods__["host"] = _python_libstorj.BridgeOptions_host_set
+    __swig_getmethods__["host"] = _python_libstorj.BridgeOptions_host_get
     if _newclass:
-        host = _swig_property(_python_libstorj.storj_bridge_options_t_host_get, _python_libstorj.storj_bridge_options_t_host_set)
-    __swig_setmethods__["port"] = _python_libstorj.storj_bridge_options_t_port_set
-    __swig_getmethods__["port"] = _python_libstorj.storj_bridge_options_t_port_get
+        host = _swig_property(_python_libstorj.BridgeOptions_host_get, _python_libstorj.BridgeOptions_host_set)
+    __swig_setmethods__["port"] = _python_libstorj.BridgeOptions_port_set
+    __swig_getmethods__["port"] = _python_libstorj.BridgeOptions_port_get
     if _newclass:
-        port = _swig_property(_python_libstorj.storj_bridge_options_t_port_get, _python_libstorj.storj_bridge_options_t_port_set)
-    __swig_setmethods__["user"] = _python_libstorj.storj_bridge_options_t_user_set
-    __swig_getmethods__["user"] = _python_libstorj.storj_bridge_options_t_user_get
+        port = _swig_property(_python_libstorj.BridgeOptions_port_get, _python_libstorj.BridgeOptions_port_set)
+    __swig_setmethods__["user"] = _python_libstorj.BridgeOptions_user_set
+    __swig_getmethods__["user"] = _python_libstorj.BridgeOptions_user_get
     if _newclass:
-        user = _swig_property(_python_libstorj.storj_bridge_options_t_user_get, _python_libstorj.storj_bridge_options_t_user_set)
-    __swig_setmethods__["_pass"] = _python_libstorj.storj_bridge_options_t__pass_set
-    __swig_getmethods__["_pass"] = _python_libstorj.storj_bridge_options_t__pass_get
+        user = _swig_property(_python_libstorj.BridgeOptions_user_get, _python_libstorj.BridgeOptions_user_set)
+    __swig_setmethods__["_pass"] = _python_libstorj.BridgeOptions__pass_set
+    __swig_getmethods__["_pass"] = _python_libstorj.BridgeOptions__pass_get
     if _newclass:
-        _pass = _swig_property(_python_libstorj.storj_bridge_options_t__pass_get, _python_libstorj.storj_bridge_options_t__pass_set)
+        _pass = _swig_property(_python_libstorj.BridgeOptions__pass_get, _python_libstorj.BridgeOptions__pass_set)
 
     def __init__(self):
-        this = _python_libstorj.new_storj_bridge_options_t()
+        this = _python_libstorj.new_BridgeOptions()
         try:
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
-    __swig_destroy__ = _python_libstorj.delete_storj_bridge_options_t
+    __swig_destroy__ = _python_libstorj.delete_BridgeOptions
     __del__ = lambda self: None
-storj_bridge_options_t_swigregister = _python_libstorj.storj_bridge_options_t_swigregister
-storj_bridge_options_t_swigregister(storj_bridge_options_t)
+BridgeOptions_swigregister = _python_libstorj.BridgeOptions_swigregister
+BridgeOptions_swigregister(BridgeOptions)
 
-class storj_encrypt_options_t(_object):
+class EncryptOptions(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, storj_encrypt_options_t, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, EncryptOptions, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, storj_encrypt_options_t, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, EncryptOptions, name)
     __repr__ = _swig_repr
-    __swig_setmethods__["mnemonic"] = _python_libstorj.storj_encrypt_options_t_mnemonic_set
-    __swig_getmethods__["mnemonic"] = _python_libstorj.storj_encrypt_options_t_mnemonic_get
+    __swig_setmethods__["mnemonic"] = _python_libstorj.EncryptOptions_mnemonic_set
+    __swig_getmethods__["mnemonic"] = _python_libstorj.EncryptOptions_mnemonic_get
     if _newclass:
-        mnemonic = _swig_property(_python_libstorj.storj_encrypt_options_t_mnemonic_get, _python_libstorj.storj_encrypt_options_t_mnemonic_set)
+        mnemonic = _swig_property(_python_libstorj.EncryptOptions_mnemonic_get, _python_libstorj.EncryptOptions_mnemonic_set)
 
     def __init__(self):
-        this = _python_libstorj.new_storj_encrypt_options_t()
+        this = _python_libstorj.new_EncryptOptions()
         try:
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
-    __swig_destroy__ = _python_libstorj.delete_storj_encrypt_options_t
+    __swig_destroy__ = _python_libstorj.delete_EncryptOptions
     __del__ = lambda self: None
-storj_encrypt_options_t_swigregister = _python_libstorj.storj_encrypt_options_t_swigregister
-storj_encrypt_options_t_swigregister(storj_encrypt_options_t)
+EncryptOptions_swigregister = _python_libstorj.EncryptOptions_swigregister
+EncryptOptions_swigregister(EncryptOptions)
 
-class storj_http_options_t(_object):
+class HttpOptions(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, storj_http_options_t, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, HttpOptions, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, storj_http_options_t, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, HttpOptions, name)
     __repr__ = _swig_repr
-    __swig_setmethods__["user_agent"] = _python_libstorj.storj_http_options_t_user_agent_set
-    __swig_getmethods__["user_agent"] = _python_libstorj.storj_http_options_t_user_agent_get
+    __swig_setmethods__["user_agent"] = _python_libstorj.HttpOptions_user_agent_set
+    __swig_getmethods__["user_agent"] = _python_libstorj.HttpOptions_user_agent_get
     if _newclass:
-        user_agent = _swig_property(_python_libstorj.storj_http_options_t_user_agent_get, _python_libstorj.storj_http_options_t_user_agent_set)
-    __swig_setmethods__["proxy_url"] = _python_libstorj.storj_http_options_t_proxy_url_set
-    __swig_getmethods__["proxy_url"] = _python_libstorj.storj_http_options_t_proxy_url_get
+        user_agent = _swig_property(_python_libstorj.HttpOptions_user_agent_get, _python_libstorj.HttpOptions_user_agent_set)
+    __swig_setmethods__["proxy_url"] = _python_libstorj.HttpOptions_proxy_url_set
+    __swig_getmethods__["proxy_url"] = _python_libstorj.HttpOptions_proxy_url_get
     if _newclass:
-        proxy_url = _swig_property(_python_libstorj.storj_http_options_t_proxy_url_get, _python_libstorj.storj_http_options_t_proxy_url_set)
-    __swig_setmethods__["cainfo_path"] = _python_libstorj.storj_http_options_t_cainfo_path_set
-    __swig_getmethods__["cainfo_path"] = _python_libstorj.storj_http_options_t_cainfo_path_get
+        proxy_url = _swig_property(_python_libstorj.HttpOptions_proxy_url_get, _python_libstorj.HttpOptions_proxy_url_set)
+    __swig_setmethods__["cainfo_path"] = _python_libstorj.HttpOptions_cainfo_path_set
+    __swig_getmethods__["cainfo_path"] = _python_libstorj.HttpOptions_cainfo_path_get
     if _newclass:
-        cainfo_path = _swig_property(_python_libstorj.storj_http_options_t_cainfo_path_get, _python_libstorj.storj_http_options_t_cainfo_path_set)
-    __swig_setmethods__["low_speed_limit"] = _python_libstorj.storj_http_options_t_low_speed_limit_set
-    __swig_getmethods__["low_speed_limit"] = _python_libstorj.storj_http_options_t_low_speed_limit_get
+        cainfo_path = _swig_property(_python_libstorj.HttpOptions_cainfo_path_get, _python_libstorj.HttpOptions_cainfo_path_set)
+    __swig_setmethods__["low_speed_limit"] = _python_libstorj.HttpOptions_low_speed_limit_set
+    __swig_getmethods__["low_speed_limit"] = _python_libstorj.HttpOptions_low_speed_limit_get
     if _newclass:
-        low_speed_limit = _swig_property(_python_libstorj.storj_http_options_t_low_speed_limit_get, _python_libstorj.storj_http_options_t_low_speed_limit_set)
-    __swig_setmethods__["low_speed_time"] = _python_libstorj.storj_http_options_t_low_speed_time_set
-    __swig_getmethods__["low_speed_time"] = _python_libstorj.storj_http_options_t_low_speed_time_get
+        low_speed_limit = _swig_property(_python_libstorj.HttpOptions_low_speed_limit_get, _python_libstorj.HttpOptions_low_speed_limit_set)
+    __swig_setmethods__["low_speed_time"] = _python_libstorj.HttpOptions_low_speed_time_set
+    __swig_getmethods__["low_speed_time"] = _python_libstorj.HttpOptions_low_speed_time_get
     if _newclass:
-        low_speed_time = _swig_property(_python_libstorj.storj_http_options_t_low_speed_time_get, _python_libstorj.storj_http_options_t_low_speed_time_set)
-    __swig_setmethods__["timeout"] = _python_libstorj.storj_http_options_t_timeout_set
-    __swig_getmethods__["timeout"] = _python_libstorj.storj_http_options_t_timeout_get
+        low_speed_time = _swig_property(_python_libstorj.HttpOptions_low_speed_time_get, _python_libstorj.HttpOptions_low_speed_time_set)
+    __swig_setmethods__["timeout"] = _python_libstorj.HttpOptions_timeout_set
+    __swig_getmethods__["timeout"] = _python_libstorj.HttpOptions_timeout_get
     if _newclass:
-        timeout = _swig_property(_python_libstorj.storj_http_options_t_timeout_get, _python_libstorj.storj_http_options_t_timeout_set)
+        timeout = _swig_property(_python_libstorj.HttpOptions_timeout_get, _python_libstorj.HttpOptions_timeout_set)
 
     def __init__(self):
-        this = _python_libstorj.new_storj_http_options_t()
+        this = _python_libstorj.new_HttpOptions()
         try:
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
-    __swig_destroy__ = _python_libstorj.delete_storj_http_options_t
+    __swig_destroy__ = _python_libstorj.delete_HttpOptions
     __del__ = lambda self: None
-storj_http_options_t_swigregister = _python_libstorj.storj_http_options_t_swigregister
-storj_http_options_t_swigregister(storj_http_options_t)
+HttpOptions_swigregister = _python_libstorj.HttpOptions_swigregister
+HttpOptions_swigregister(HttpOptions)
 
-class storj_log_options_t(_object):
+class LogOptions(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, storj_log_options_t, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LogOptions, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, storj_log_options_t, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, LogOptions, name)
     __repr__ = _swig_repr
-    __swig_setmethods__["logger"] = _python_libstorj.storj_log_options_t_logger_set
-    __swig_getmethods__["logger"] = _python_libstorj.storj_log_options_t_logger_get
+    __swig_setmethods__["logger"] = _python_libstorj.LogOptions_logger_set
+    __swig_getmethods__["logger"] = _python_libstorj.LogOptions_logger_get
     if _newclass:
-        logger = _swig_property(_python_libstorj.storj_log_options_t_logger_get, _python_libstorj.storj_log_options_t_logger_set)
-    __swig_setmethods__["level"] = _python_libstorj.storj_log_options_t_level_set
-    __swig_getmethods__["level"] = _python_libstorj.storj_log_options_t_level_get
+        logger = _swig_property(_python_libstorj.LogOptions_logger_get, _python_libstorj.LogOptions_logger_set)
+    __swig_setmethods__["level"] = _python_libstorj.LogOptions_level_set
+    __swig_getmethods__["level"] = _python_libstorj.LogOptions_level_get
     if _newclass:
-        level = _swig_property(_python_libstorj.storj_log_options_t_level_get, _python_libstorj.storj_log_options_t_level_set)
+        level = _swig_property(_python_libstorj.LogOptions_level_get, _python_libstorj.LogOptions_level_set)
 
     def __init__(self):
-        this = _python_libstorj.new_storj_log_options_t()
+        this = _python_libstorj.new_LogOptions()
         try:
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
-    __swig_destroy__ = _python_libstorj.delete_storj_log_options_t
+    __swig_destroy__ = _python_libstorj.delete_LogOptions
     __del__ = lambda self: None
-storj_log_options_t_swigregister = _python_libstorj.storj_log_options_t_swigregister
-storj_log_options_t_swigregister(storj_log_options_t)
+LogOptions_swigregister = _python_libstorj.LogOptions_swigregister
+LogOptions_swigregister(LogOptions)
 
 class storj_log_levels_t(_object):
     __swig_setmethods__ = {}
@@ -1526,9 +1526,9 @@ storj_upload_state_t_swigregister = _python_libstorj.storj_upload_state_t_swigre
 storj_upload_state_t_swigregister(storj_upload_state_t)
 
 
-def storj_init_env(options, encrypt_options, http_options, log_options):
-    return _python_libstorj.storj_init_env(options, encrypt_options, http_options, log_options)
-storj_init_env = _python_libstorj.storj_init_env
+def init_env(options, encrypt_options, http_options, log_options):
+    return _python_libstorj.init_env(options, encrypt_options, http_options, log_options)
+init_env = _python_libstorj.init_env
 
 def storj_destroy_env(env):
     return _python_libstorj.storj_destroy_env(env)
@@ -1657,6 +1657,22 @@ storj_bridge_register = _python_libstorj.storj_bridge_register
 def separator():
     return _python_libstorj.separator()
 separator = _python_libstorj.separator
+
+def get_info(env, handle):
+    return _python_libstorj.get_info(env, handle)
+get_info = _python_libstorj.get_info
+
+def get_info_cb(work_req, status):
+    return _python_libstorj.get_info_cb(work_req, status)
+get_info_cb = _python_libstorj.get_info_cb
+
+def set_loop(env):
+    return _python_libstorj.set_loop(env)
+set_loop = _python_libstorj.set_loop
+
+def run(loop):
+    return _python_libstorj.run(loop)
+run = _python_libstorj.run
 # This file is compatible with both classic and new-style classes.
 
 
