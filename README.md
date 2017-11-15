@@ -17,10 +17,6 @@ Environment Setup
     ```
     . env/bin/activate
     ```
-1. Installing project dependencies
-    ```
-    pip install -r
-    ```
 
 Build
 ---
