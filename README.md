@@ -5,6 +5,7 @@ Dependencies
 ---
 + python 2.7
 + [virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
++ [swig](http://www.swig.org/)
 
 
 Environment Setup

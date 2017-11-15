@@ -4,3 +4,4 @@ env/*
 *.so
 *.pyc
 *.cxx
+python_libstorj.py
