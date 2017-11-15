@@ -28,7 +28,7 @@ void get_info_cb(uv_work_t *work_req, int status) {
         result = (char *)json_object_to_json_string(req->response);
     }
 
-    PyObject_CallFunction(_handle, "ss", result, error);
+    PyObject_CallFunction(_handle, "ss", error, result);
 }
 
 void list_buckets_cb(uv_work_t *work_req, int status) {
@@ -54,19 +54,19 @@ void list_buckets_cb(uv_work_t *work_req, int status) {
     }
 
     PyObject *args_tuple = PyTuple_New(2);
-    PyTuple_SetItem(args_tuple, 0, bucket_list);
-    PyTuple_SetItem(args_tuple, 1, error);
+    PyTuple_SetItem(args_tuple, 0, error);
+    PyTuple_SetItem(args_tuple, 1, bucket_list);
     PyObject_CallObject(_handle, args_tuple);
 }
 
-void get_info(storj_env_t *env, PyObject *handle) {
-    void *cb = (void *)handle;
-    storj_bridge_get_info(env, cb, get_info_cb);
+void get_info(storj_env_t *env, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    storj_bridge_get_info(env, void_callback, get_info_cb);
 }
 
-void list_buckets(storj_env_t *env, PyObject *handle) {
-    void *cb = (void *)handle;
-    storj_bridge_get_buckets(env, cb, list_buckets_cb);
+void list_buckets(storj_env_t *env, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    storj_bridge_get_buckets(env, void_callback, list_buckets_cb);
 }
 
 void run(uv_loop_t *loop) {

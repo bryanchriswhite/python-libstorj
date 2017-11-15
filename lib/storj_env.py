@@ -1,4 +1,4 @@
-import python_libstorj as pystorj
+from ext import python_libstorj as pystorj
 
 class StorjEnv():
     def __init__(self,
@@ -32,39 +32,3 @@ class StorjEnv():
     def list_buckets(self, handle):
         pystorj.list_buckets(self.env, handle)
         pystorj.run(self.env.loop)
-
-
-env = StorjEnv(
-    bridge_options={
-        'proto': 'http',
-        'host': 'localhost',
-        'port': 8080,
-        'user': 'user@example.com',
-        'password': 'examplepassword'
-
-    },
-    encrypt_options={
-        'mnemonic': 'crash venture snow hungry script arch ankle luxury borrow airport voyage man'
-    },
-    http_options={
-        'user_agent': 'curl/7.52.1',
-        'low_speed_limit': 30720,
-        'low_speed_time': 20,
-        'timeout': 60
-    },
-    log_options={
-        'level': 4
-    }
-)
-
-
-def handle(result, error):
-    if (error is not None):
-        print('error: %s' % error)
-        return
-
-    print('result: %s' % result)
-
-
-# env.get_info(handle)
-env.list_buckets(handle)

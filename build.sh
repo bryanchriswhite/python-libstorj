@@ -1,5 +1,5 @@
 #!/bin/bash
 
 . ./env/bin/activate;
-swig -c++ -python ./python_libstorj.i && \
-python ./setup.py build_ext --inplace
+swig -c++ -python -outdir lib/ext ./lib/ext/python_libstorj.i && \
+python ./setup.py build_ext

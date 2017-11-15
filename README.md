@@ -18,10 +18,25 @@ Environment Setup
     ```
     . env/bin/activate
     ```
+1. Copy `tests/options_example.yml` to `tests/options.yml` and edit:
+      + `bridge_options`
+        - `user`
+        - `pass`
+        - `host` _(if applicable)_
+        - `port` _(if applicable)_
+        - `proto` _(if applicable)_
+      + `encrypt_options`
+        - `mnemonic`
 
 Build
 ---
 Run the build shell script:
 ```
 ./build.sh
+```
+
+Running Tests
+---
+```
+python -m unittest discover
 ```
