@@ -25,4 +25,8 @@ int storj_mnemonic_generate(int strength, char **buffer);
 
 void get_info(storj_env_t *env, PyObject *handle);
 %constant void get_info(storj_env_t *env, PyObject *handle);
+
+void list_buckets(storj_env_t *env, PyObject *handle);
+%constant void list_buckets(storj_env_t *env, PyObject *handle);
+
 void run(uv_loop_t *loop);

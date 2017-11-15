@@ -1666,6 +1666,14 @@ def get_info_cb(work_req, status):
     return _python_libstorj.get_info_cb(work_req, status)
 get_info_cb = _python_libstorj.get_info_cb
 
+def list_buckets(env, handle):
+    return _python_libstorj.list_buckets(env, handle)
+list_buckets = _python_libstorj.list_buckets
+
+def list_buckets_cb(work_req, status):
+    return _python_libstorj.list_buckets_cb(work_req, status)
+list_buckets_cb = _python_libstorj.list_buckets_cb
+
 def set_loop(env):
     return _python_libstorj.set_loop(env)
 set_loop = _python_libstorj.set_loop

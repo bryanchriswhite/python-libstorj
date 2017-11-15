@@ -17,6 +17,8 @@ class StorjEnv():
         for option_pair in options_list:
             (options, option_struct) = option_pair
             for key, value in options.viewitems():
+                if key == 'pass':
+                    key = '_pass'
                 setattr(option_struct, key, value)
 
         options = zip(*options_list)[1]
@@ -25,6 +27,10 @@ class StorjEnv():
 
     def get_info(self, handle):
         pystorj.get_info(self.env, handle)
+        pystorj.run(self.env.loop)
+
+    def list_buckets(self, handle):
+        pystorj.list_buckets(self.env, handle)
         pystorj.run(self.env.loop)
 
 
@@ -60,4 +66,5 @@ def handle(result, error):
     print('result: %s' % result)
 
 
-env.get_info(handle)
+# env.get_info(handle)
+env.list_buckets(handle)
