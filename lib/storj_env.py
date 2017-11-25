@@ -1,3 +1,4 @@
+import json
 from ext import python_libstorj as pystorj
 
 class StorjEnv():
@@ -18,6 +19,7 @@ class StorjEnv():
             (options, option_struct) = option_pair
             for key, value in options.viewitems():
                 if key == 'pass':
+                    # NB: `pass` is a reserved attribute name
                     key = '_pass'
                 setattr(option_struct, key, value)
 
@@ -26,7 +28,10 @@ class StorjEnv():
         self.env.loop = pystorj.set_loop(self.env)
 
     def get_info(self, handle):
-        pystorj.get_info(self.env, handle)
+        def _handle(error, result):
+            result_object = json.loads(result)
+            handle(error, result_object)
+        pystorj.get_info(self.env, _handle)
         pystorj.run(self.env.loop)
 
     def list_buckets(self, handle):
