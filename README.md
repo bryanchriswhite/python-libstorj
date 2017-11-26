@@ -1,5 +1,6 @@
 `python_libstorj`
 ===
+[![Build Status](https://travis-ci.org/Storj/python-libstorj.svg?branch=master)](https://travis-ci.org/Storj/python-libstorj)
 
 Dependencies
 ---
