@@ -18,6 +18,7 @@ class TestStorjEnv(unittest.TestCase):
         buckets = self.env.list_buckets()
         return next(bucket['id'] for bucket in buckets if bucket['name'] == name)
 
+class TestGetInfo(TestStorjEnv):
     def test_get_info(self):
         results = []
 
