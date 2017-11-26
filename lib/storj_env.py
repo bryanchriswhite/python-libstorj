@@ -28,6 +28,9 @@ class StorjEnv():
         self.env = pystorj.init_env(*options)
         self.env.loop = pystorj.set_loop(self.env)
 
+    def destroy(self):
+        pystorj.destroy_env(self.env)
+
     def get_info(self, handle):
         def _handle(error, result):
             result_object = json.loads(result)
@@ -35,16 +38,52 @@ class StorjEnv():
         pystorj.get_info(self.env, _handle)
         pystorj.run(self.env.loop)
 
-    def list_buckets(self, handle):
+    def list_buckets(self, callback=None):
+        results = []
         def _handle(error, buckets):
             for i, bucket in enumerate(buckets):
                 iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
                 created_date = datetime.strptime(bucket['created'], iso8601_format)
                 buckets[i]['created'] = created_date
-            handle(error, buckets)
+            results.append(error)
+            results.append(buckets)
+
+            if callback:
+                return callback(*results)
+
+            if error:
+                raise Exception(error)
+
         pystorj.list_buckets(self.env, _handle)
         pystorj.run(self.env.loop)
+        return results[1]
 
-    def create_bucket(self, name, handle):
-        pystorj.create_bucket(self.env, name, handle)
+    def create_bucket(self, name, callback=None):
+        results = []
+        def _handle(error, bucket):
+            results.append(error)
+            results.append(bucket)
+
+            if callback:
+                return callback(*results)
+
+            if error:
+                raise Exception(error)
+
+        pystorj.create_bucket(self.env, name, _handle)
+        pystorj.run(self.env.loop)
+        return results[1]
+
+    def delete_bucket(self, id, callback=None):
+        results = []
+        def _handle(error):
+            results.append(error)
+
+            if callback:
+                return callback(*results)
+
+            if error:
+                raise Exception(error)
+
+        pystorj.delete_bucket(self.env, id, _handle)
         pystorj.run(self.env.loop)

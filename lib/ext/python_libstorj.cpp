@@ -81,6 +81,15 @@ void create_bucket_cb(uv_work_t *work_req, int status) {
     PyObject_CallObject(_handle, args_tuple);
 }
 
+void delete_bucket_cb(uv_work_t *work_req, int status) {
+    char *error_str = NULL;
+    json_request_t *req = (json_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    error_and_status_check<json_request_t>(req, &error_str);
+    PyObject_CallFunction(_handle, "s", error_str);
+}
+
 void get_info(storj_env_t *env, PyObject *callback) {
     void *void_callback = (void *)callback;
     storj_bridge_get_info(env, void_callback, get_info_cb);
@@ -95,6 +104,12 @@ void create_bucket(storj_env_t *env, PyObject *py_name, PyObject *callback) {
     void *void_callback = (void *)callback;
     char *name = PyString_AsString(py_name);
     storj_bridge_create_bucket(env, name, void_callback, create_bucket_cb);
+}
+
+void delete_bucket(storj_env_t *env, PyObject *py_id, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    char *id = PyString_AsString(py_id);
+    storj_bridge_delete_bucket(env, id, void_callback, delete_bucket_cb);
 }
 
 void run(uv_loop_t *loop) {

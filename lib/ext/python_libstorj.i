@@ -19,6 +19,7 @@ int storj_mnemonic_generate(int strength, char **buffer);
 %rename(LogOptions) storj_log_options;
 %rename(BridgeOptions) storj_bridge_options_t;
 %rename(init_env) storj_init_env;
+%rename(destroy_env) storj_destroy_env;
 
 %include "ext/libstorj/src/storj.h"
 %include "python_libstorj.h"
@@ -31,5 +32,8 @@ void list_buckets(storj_env_t *env, PyObject *handle);
 
 void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
 %constant void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
+
+void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
+%constant void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
 
 void run(uv_loop_t *loop);
