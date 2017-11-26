@@ -37,3 +37,7 @@ class StorjEnv():
     def list_buckets(self, handle):
         pystorj.list_buckets(self.env, handle)
         pystorj.run(self.env.loop)
+
+    def create_bucket(self, name, handle):
+        pystorj.create_bucket(self.env, name, handle)
+        pystorj.run(self.env.loop)

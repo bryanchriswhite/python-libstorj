@@ -43,9 +43,9 @@ void list_buckets_cb(uv_work_t *work_req, int status) {
         for (uint8_t i=0; i<req->total_buckets; i++) {
             PyObject *bucket_dict = PyDict_New();
             PyDict_SetItemString(bucket_dict,"name", PyString_FromString(req->buckets[i].name));
-            PyDict_SetItemString(bucket_dict,"created", PyString_FromString(req->buckets[i].created));
             PyDict_SetItemString(bucket_dict,"id", PyString_FromString(req->buckets[i].id));
             PyDict_SetItemString(bucket_dict,"decrypted", PyBool_FromLong((long)req->buckets[i].decrypted));
+            PyDict_SetItemString(bucket_dict,"created", PyString_FromString(req->buckets[i].created));
             PyList_SetItem(bucket_list, i, bucket_dict);
         }
     } else {
@@ -59,6 +59,29 @@ void list_buckets_cb(uv_work_t *work_req, int status) {
     PyObject_CallObject(_handle, args_tuple);
 }
 
+void create_bucket_cb(uv_work_t *work_req, int status) {
+    char *error_str = NULL;
+    PyObject *error = Py_None;
+    PyObject *bucket = Py_None;
+    create_bucket_request_t *req = (create_bucket_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    if (error_and_status_check<create_bucket_request_t>(req, &error_str)) {
+        bucket = PyDict_New();
+        PyDict_SetItemString(bucket, "name", PyString_FromString(req->bucket->name));
+        PyDict_SetItemString(bucket, "id", PyString_FromString(req->bucket->id));
+        PyDict_SetItemString(bucket, "decrypted", PyBool_FromLong((long)req->bucket->decrypted));
+        PyDict_SetItemString(bucket, "created", PyString_FromString(req->bucket->created));
+    } else {
+        error =  PyString_FromString(error_str);
+    }
+
+    PyObject *args_tuple = PyTuple_New(2);
+    PyTuple_SetItem(args_tuple, 0, error);
+    PyTuple_SetItem(args_tuple, 1, bucket);
+    PyObject_CallObject(_handle, args_tuple);
+}
+
 void get_info(storj_env_t *env, PyObject *callback) {
     void *void_callback = (void *)callback;
     storj_bridge_get_info(env, void_callback, get_info_cb);
@@ -67,6 +90,12 @@ void get_info(storj_env_t *env, PyObject *callback) {
 void list_buckets(storj_env_t *env, PyObject *callback) {
     void *void_callback = (void *)callback;
     storj_bridge_get_buckets(env, void_callback, list_buckets_cb);
+}
+
+void create_bucket(storj_env_t *env, PyObject *py_name, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    char *name = PyString_AsString(py_name);
+    storj_bridge_create_bucket(env, name, void_callback, create_bucket_cb);
 }
 
 void run(uv_loop_t *loop) {

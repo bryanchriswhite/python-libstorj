@@ -29,4 +29,7 @@ void get_info(storj_env_t *env, PyObject *handle);
 void list_buckets(storj_env_t *env, PyObject *handle);
 %constant void list_buckets(storj_env_t *env, PyObject *handle);
 
+void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
+%constant void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
+
 void run(uv_loop_t *loop);
