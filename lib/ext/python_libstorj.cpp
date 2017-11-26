@@ -71,7 +71,6 @@ void create_bucket_cb(uv_work_t *work_req, int status) {
         PyDict_SetItemString(bucket, "name", PyString_FromString(req->bucket->name));
         PyDict_SetItemString(bucket, "id", PyString_FromString(req->bucket->id));
         PyDict_SetItemString(bucket, "decrypted", PyBool_FromLong((long)req->bucket->decrypted));
-        PyDict_SetItemString(bucket, "created", PyString_FromString(req->bucket->created));
     } else {
         error =  PyString_FromString(error_str);
     }

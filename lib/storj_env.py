@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from ext import python_libstorj as pystorj
 
 class StorjEnv():
@@ -35,7 +36,13 @@ class StorjEnv():
         pystorj.run(self.env.loop)
 
     def list_buckets(self, handle):
-        pystorj.list_buckets(self.env, handle)
+        def _handle(error, buckets):
+            for i, bucket in enumerate(buckets):
+                iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+                created_date = datetime.strptime(bucket['created'], iso8601_format)
+                buckets[i]['created'] = created_date
+            handle(error, buckets)
+        pystorj.list_buckets(self.env, _handle)
         pystorj.run(self.env.loop)
 
     def create_bucket(self, name, handle):

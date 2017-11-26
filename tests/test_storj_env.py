@@ -1,4 +1,5 @@
 import sys, os, yaml, json, unittest
+from datetime import datetime
 sys.path.append('..')
 
 from lib.storj_env import StorjEnv
@@ -54,4 +55,5 @@ class TestStorjEnv(unittest.TestCase):
         buckets, error = [results[key] for key in ('buckets', 'error')]
         self.assertEqual(error, None)
         self.assertEqual(len(buckets), 1)
+        self.assertIsInstance(buckets[0]['created'], datetime)
         self.assertEqual(buckets[0]['name'], bucket_name)
