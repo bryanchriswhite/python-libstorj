@@ -6,3 +6,4 @@ env/*
 *.cxx
 lib/ext/python_libstorj.py
 tests/options.yml
+tests/download.data
