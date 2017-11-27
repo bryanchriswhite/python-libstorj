@@ -1,4 +1,4 @@
-import sys, subprocess, yaml, json, unittest
+import sys, subprocess, yaml, unittest
 from os import path
 from datetime import datetime
 from lib.storj_env import StorjEnv
@@ -89,8 +89,8 @@ class TestListBuckets(TestStorjEnv):
             'error': ''
         }
 
-        def callback(error, buckets_):
-            results['error'] = error
+        def callback(error_, buckets_):
+            results['error'] = error_
             for i, bucket in enumerate(buckets_):
                 results['buckets'].append(bucket)
 
@@ -127,5 +127,18 @@ class TestListFiles(TestStorjEnv):
 
     def test_list_files_without_callback(self):
         files = self.env.list_files(self.bucket['id'])
+        self.assertEqual(len(files), 1)
+        self.assertEqual(files[0]['filename'], 'test.data')
+
+    def test_list_files_with_callback(self):
+        results = []
+
+        def callback(error_, files_):
+            results.append(error_)
+            results.append(files_)
+
+        self.env.list_files(self.bucket['id'], callback)
+        error, files = results
+        self.assertEqual(error, None)
         self.assertEqual(len(files), 1)
         self.assertEqual(files[0]['filename'], 'test.data')
