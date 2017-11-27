@@ -20,7 +20,8 @@ class StorjEnv():
             (options, option_struct) = option_pair
             for key, value in options.viewitems():
                 if key == 'pass':
-                    # NB: `pass` is a reserved attribute name
+                    # NB: `pass` is a reserved attribute name; swig
+                    #     knows this and has changed `pass` to `_pass`
                     key = '_pass'
                 setattr(option_struct, key, value)
 

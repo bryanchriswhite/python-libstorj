@@ -24,8 +24,6 @@ sudo make install
 
 cd $deps_dir/libuv-1.8.0
 sh ./autogen.sh
-echo 'echo $CFLAGS'
-echo $CFLAGS
 CFLAGS="-std=c99" ./configure
 #./configure
 make

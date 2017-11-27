@@ -1,11 +1,13 @@
-import sys, os, yaml, json, unittest
+import sys, subprocess, yaml, json, unittest
+from os import path
 from datetime import datetime
+from lib.storj_env import StorjEnv
 sys.path.append('..')
 
-from lib.storj_env import StorjEnv
+
 class TestStorjEnv(unittest.TestCase):
     def setUp(self):
-        options_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'options.yml')
+        options_path = path.join(path.dirname(path.realpath(__file__)), 'options.yml')
         with open(options_path, 'r') as options_file:
             self.options = yaml.load(options_file.read())
 
@@ -18,13 +20,14 @@ class TestStorjEnv(unittest.TestCase):
         buckets = self.env.list_buckets()
         return next(bucket['id'] for bucket in buckets if bucket['name'] == name)
 
+
 class TestGetInfo(TestStorjEnv):
     def test_get_info(self):
         results = []
 
-        def callback(error, _info):
-            results.append(error)
-            results.append(_info)
+        def callback(error_, info_):
+            results.append(error_)
+            results.append(info_)
 
         self.env.get_info(callback)
         error, info = results
@@ -32,14 +35,15 @@ class TestGetInfo(TestStorjEnv):
         self.assertEqual(info['host'], self.options['bridge_options']['host'])
         self.assertEqual(info['info']['title'], 'Storj Bridge')
 
+
 class TestCreateDestroy(TestStorjEnv):
     def test_create_bucket_with_callback(self):
         bucket_name = 'python_libstorj-test'
         results = []
 
-        def callback(error, _bucket):
-            results.append(error)
-            results.append(_bucket)
+        def callback(error_, bucket_):
+            results.append(error_)
+            results.append(bucket_)
 
         self.env.create_bucket(bucket_name, callback)
         error, bucket = results
@@ -56,8 +60,8 @@ class TestCreateDestroy(TestStorjEnv):
         bucket_name = self.get_bucket_id('python_libstorj-test')
         results = []
 
-        def callback(error):
-            results.append(error)
+        def callback(error_):
+            results.append(error_)
 
         self.env.delete_bucket(bucket_name, callback)
         error = results[0]
@@ -72,11 +76,10 @@ class TestCreateDestroy(TestStorjEnv):
 class TestListBuckets(TestStorjEnv):
     def setUp(self):
         super(TestListBuckets, self).setUp()
-        self.env.create_bucket('python_libstorj-test3')
+        self.bucket = self.env.create_bucket('python_libstorj-test3')
 
     def tearDown(self):
-        bucket_id = self.get_bucket_id('python_libstorj-test3')
-        self.env.delete_bucket(bucket_id)
+        self.env.delete_bucket(self.bucket['id'])
         super(TestListBuckets, self).tearDown()
 
     def test_list_buckets_with_callback(self):
@@ -86,9 +89,9 @@ class TestListBuckets(TestStorjEnv):
             'error': ''
         }
 
-        def callback(error, _buckets):
+        def callback(error, buckets_):
             results['error'] = error
-            for i, bucket in enumerate(_buckets):
+            for i, bucket in enumerate(buckets_):
                 results['buckets'].append(bucket)
 
         self.env.list_buckets(callback)
@@ -106,3 +109,25 @@ class TestListBuckets(TestStorjEnv):
         self.assertIsInstance(buckets[0]['created'], datetime)
         self.assertEqual(buckets[0]['name'], bucket_name)
 
+
+class TestListFiles(TestStorjEnv):
+    def setUp(self):
+        super(TestListFiles, self).setUp()
+        file_path = path.join(path.dirname(path.realpath(__file__)), 'test.data')
+        self.bucket = self.env.create_bucket('python_libstorj-test4')
+        upload_file_command = 'storj upload-file %s %s' % (self.bucket['id'], file_path)
+        # NB: `stdout=subprocess.PIPE` prevents subprocess
+        #     stdout from printing during unittest
+        subprocess.call(upload_file_command.split(), stdout=subprocess.PIPE)
+
+    def tearDown(self):
+        # TODO: remove file as soon as it's implemented
+        # remove_file_command = 'storj remove-file %s %s' % (self.['id'], 'test.data')
+        # subprocess.call(remove_file_command.split())
+        self.env.delete_bucket(self.bucket['id'])
+        super(TestListFiles, self).tearDown()
+
+    def test_list_files_without_callback(self):
+        files = self.env.list_files()
+        self.assertEqual(len(files), 1)
+        self.assertEqual(files[0]['filename'], 'test.data')
