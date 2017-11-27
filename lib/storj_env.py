@@ -33,12 +33,22 @@ class StorjEnv():
     def destroy(self):
         pystorj.destroy_env(self.env)
 
-    def get_info(self, handle):
+    def get_info(self, callback=None):
+        results = []
+
         def handle_(error, result):
-            result_object = json.loads(result)
-            handle(error, result_object)
+            info = json.loads(result)
+            results.append(info)
+
+            if callback is not None:
+                callback(error, info)
+
+            if error is not None:
+                raise Exception(error)
+
         pystorj.get_info(self.env, handle_)
         pystorj.run(self.env.loop)
+        return results[0]
 
     def list_buckets(self, callback=None):
         results = []
@@ -48,46 +58,40 @@ class StorjEnv():
                 iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
                 created_date = datetime.strptime(bucket['created'], iso8601_format)
                 buckets[i]['created'] = created_date
-            results.append(error)
             results.append(buckets)
 
-            if callback:
-                return callback(*results)
+            if callback is not None:
+                return callback(error, buckets)
 
-            if error:
+            if error is not None:
                 raise Exception(error)
 
         pystorj.list_buckets(self.env, handle_)
         pystorj.run(self.env.loop)
-        return results[1]
+        return results[0]
 
     def create_bucket(self, name, callback=None):
         results = []
 
         def handle_(error, bucket):
-            results.append(error)
             results.append(bucket)
 
-            if callback:
-                return callback(*results)
+            if callback is not None:
+                return callback(error, bucket)
 
-            if error:
+            if error is not None:
                 raise Exception(error)
 
         pystorj.create_bucket(self.env, name, handle_)
         pystorj.run(self.env.loop)
-        return results[1]
+        return results[0]
 
     def delete_bucket(self, bucket_id, callback=None):
-        results = []
-
         def handle_(error):
-            results.append(error)
+            if callback is not None:
+                return callback(error)
 
-            if callback:
-                return callback(*results)
-
-            if error:
+            if error is not None:
                 raise Exception(error)
 
         pystorj.delete_bucket(self.env, bucket_id, handle_)
@@ -101,15 +105,14 @@ class StorjEnv():
                 iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
                 created_date = datetime.strptime(file_['created'], iso8601_format)
                 files[i]['created'] = created_date
-            results.append(error)
             results.append(files)
 
-            if callback:
-                return callback(*results)
+            if callback is not None:
+                return callback(error, files)
 
-            if error:
+            if error is not None:
                 raise Exception(error)
 
         pystorj.list_files(self.env, bucket_id, handle_)
         pystorj.run(self.env.loop)
-        return results[1]
+        return results[0]

@@ -22,7 +22,12 @@ class TestStorjEnv(unittest.TestCase):
 
 
 class TestGetInfo(TestStorjEnv):
-    def test_get_info(self):
+    def test_get_info_without_callback(self):
+        info = self.env.get_info()
+        self.assertEqual(info['host'], self.options['bridge_options']['host'])
+        self.assertEqual(info['info']['title'], 'Storj Bridge')
+
+    def test_get_info_with_callback(self):
         results = []
 
         def callback(error_, info_):
@@ -37,6 +42,12 @@ class TestGetInfo(TestStorjEnv):
 
 
 class TestCreateDestroy(TestStorjEnv):
+    def test_create_bucket_without_callback(self):
+        bucket_name = 'python_libstorj-test2'
+
+        bucket = self.env.create_bucket(bucket_name)
+        self.assertEqual(bucket['name'], bucket_name)
+
     def test_create_bucket_with_callback(self):
         bucket_name = 'python_libstorj-test'
         results = []
@@ -50,11 +61,10 @@ class TestCreateDestroy(TestStorjEnv):
         self.assertEqual(error, None)
         self.assertEqual(bucket['name'], bucket_name)
 
-    def test_create_bucket_without_callback(self):
-        bucket_name = 'python_libstorj-test2'
+    def test_delete_bucket_without_callback(self):
+        bucket_name = self.get_bucket_id('python_libstorj-test2')
 
-        bucket = self.env.create_bucket(bucket_name)
-        self.assertEqual(bucket['name'], bucket_name)
+        self.env.delete_bucket(bucket_name)
 
     def test_delete_bucket_with_callback(self):
         bucket_name = self.get_bucket_id('python_libstorj-test')
@@ -67,11 +77,6 @@ class TestCreateDestroy(TestStorjEnv):
         error = results[0]
         self.assertEqual(error, None)
 
-    def test_delete_bucket_without_callback(self):
-        bucket_name = self.get_bucket_id('python_libstorj-test2')
-
-        self.env.delete_bucket(bucket_name)
-
 
 class TestListBuckets(TestStorjEnv):
     def setUp(self):
@@ -81,6 +86,14 @@ class TestListBuckets(TestStorjEnv):
     def tearDown(self):
         self.env.delete_bucket(self.bucket['id'])
         super(TestListBuckets, self).tearDown()
+
+    def test_list_buckets_without_callback(self):
+        bucket_name = 'python_libstorj-test3'
+
+        buckets = self.env.list_buckets()
+        self.assertEqual(len(buckets), 1)
+        self.assertIsInstance(buckets[0]['created'], datetime)
+        self.assertEqual(buckets[0]['name'], bucket_name)
 
     def test_list_buckets_with_callback(self):
         bucket_name = 'python_libstorj-test3'
@@ -97,14 +110,6 @@ class TestListBuckets(TestStorjEnv):
         self.env.list_buckets(callback)
         buckets, error = [results[key] for key in ('buckets', 'error')]
         self.assertEqual(error, None)
-        self.assertEqual(len(buckets), 1)
-        self.assertIsInstance(buckets[0]['created'], datetime)
-        self.assertEqual(buckets[0]['name'], bucket_name)
-
-    def test_list_buckets_without_callback(self):
-        bucket_name = 'python_libstorj-test3'
-
-        buckets = self.env.list_buckets()
         self.assertEqual(len(buckets), 1)
         self.assertIsInstance(buckets[0]['created'], datetime)
         self.assertEqual(buckets[0]['name'], bucket_name)
