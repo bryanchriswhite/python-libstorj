@@ -128,6 +128,6 @@ class TestListFiles(TestStorjEnv):
         super(TestListFiles, self).tearDown()
 
     def test_list_files_without_callback(self):
-        files = self.env.list_files()
+        files = self.env.list_files(self.bucket['id'])
         self.assertEqual(len(files), 1)
         self.assertEqual(files[0]['filename'], 'test.data')

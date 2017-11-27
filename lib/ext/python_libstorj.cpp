@@ -31,34 +31,6 @@ void get_info_cb(uv_work_t *work_req, int status) {
     PyObject_CallFunction(_handle, "ss", error, result);
 }
 
-void list_buckets_cb(uv_work_t *work_req, int status) {
-    char *error_str = NULL;
-    PyObject *error = Py_None;
-    PyObject *bucket_list = Py_None;
-    get_buckets_request_t *req = (get_buckets_request_t *)work_req->data;
-    PyObject *_handle = (PyObject *)req->handle;
-
-    if (error_and_status_check<get_buckets_request_t>(req, &error_str)) {
-        bucket_list = PyList_New(req->total_buckets);
-        for (uint8_t i=0; i<req->total_buckets; i++) {
-            PyObject *bucket_dict = PyDict_New();
-            PyDict_SetItemString(bucket_dict,"name", PyString_FromString(req->buckets[i].name));
-            PyDict_SetItemString(bucket_dict,"id", PyString_FromString(req->buckets[i].id));
-            PyDict_SetItemString(bucket_dict,"decrypted", PyBool_FromLong((long)req->buckets[i].decrypted));
-            PyDict_SetItemString(bucket_dict,"created", PyString_FromString(req->buckets[i].created));
-            PyList_SetItem(bucket_list, i, bucket_dict);
-        }
-    } else {
-        bucket_list = PyList_New(0);
-        error = PyString_FromString(error_str);
-    }
-
-    PyObject *args_tuple = PyTuple_New(2);
-    PyTuple_SetItem(args_tuple, 0, error);
-    PyTuple_SetItem(args_tuple, 1, bucket_list);
-    PyObject_CallObject(_handle, args_tuple);
-}
-
 void create_bucket_cb(uv_work_t *work_req, int status) {
     char *error_str = NULL;
     PyObject *error = Py_None;
@@ -90,14 +62,67 @@ void delete_bucket_cb(uv_work_t *work_req, int status) {
     PyObject_CallFunction(_handle, "s", error_str);
 }
 
+void list_buckets_cb(uv_work_t *work_req, int status) {
+    char *error_str = NULL;
+    PyObject *error = Py_None;
+    PyObject *bucket_list = Py_None;
+    get_buckets_request_t *req = (get_buckets_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    if (error_and_status_check<get_buckets_request_t>(req, &error_str)) {
+        bucket_list = PyList_New(req->total_buckets);
+        for (uint8_t i=0; i<req->total_buckets; i++) {
+            PyObject *bucket_dict = PyDict_New();
+            PyDict_SetItemString(bucket_dict,"name", PyString_FromString(req->buckets[i].name));
+            PyDict_SetItemString(bucket_dict,"id", PyString_FromString(req->buckets[i].id));
+            PyDict_SetItemString(bucket_dict,"decrypted", PyBool_FromLong((long)req->buckets[i].decrypted));
+            PyDict_SetItemString(bucket_dict,"created", PyString_FromString(req->buckets[i].created));
+            PyList_SetItem(bucket_list, i, bucket_dict);
+        }
+    } else {
+        bucket_list = PyList_New(0);
+        error = PyString_FromString(error_str);
+    }
+
+    PyObject *args_tuple = PyTuple_New(2);
+    PyTuple_SetItem(args_tuple, 0, error);
+    PyTuple_SetItem(args_tuple, 1, bucket_list);
+    PyObject_CallObject(_handle, args_tuple);
+}
+
+void list_files_cb(uv_work_t *work_req, int status) {
+    char *error_str = NULL;
+    PyObject *error = Py_None;
+    PyObject *file_list = Py_None;
+    list_files_request_t *req = (list_files_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    if (error_and_status_check<list_files_request_t>(req, &error_str)) {
+        file_list = PyList_New(req->total_files);
+        for (uint8_t i=0; i<req->total_files; i++) {
+            PyObject *file_dict = PyDict_New();
+            PyDict_SetItemString(file_dict,"filename", PyString_FromString(req->files[i].filename));
+            PyDict_SetItemString(file_dict,"id", PyString_FromString(req->files[i].id));
+            PyDict_SetItemString(file_dict,"decrypted", PyBool_FromLong((long)req->files[i].decrypted));
+            PyDict_SetItemString(file_dict,"created", PyString_FromString(req->files[i].created));
+            PyDict_SetItemString(file_dict,"size", Py_BuildValue("k", req->files[i].size));
+            PyDict_SetItemString(file_dict,"mimetype", PyString_FromString(req->files[i].mimetype));
+            PyList_SetItem(file_list, i, file_dict);
+        }
+    } else {
+        file_list = PyList_New(0);
+        error = PyString_FromString(error_str);
+    }
+
+    PyObject *args_tuple = PyTuple_New(2);
+    PyTuple_SetItem(args_tuple, 0, error);
+    PyTuple_SetItem(args_tuple, 1, file_list);
+    PyObject_CallObject(_handle, args_tuple);
+}
+
 void get_info(storj_env_t *env, PyObject *callback) {
     void *void_callback = (void *)callback;
     storj_bridge_get_info(env, void_callback, get_info_cb);
-}
-
-void list_buckets(storj_env_t *env, PyObject *callback) {
-    void *void_callback = (void *)callback;
-    storj_bridge_get_buckets(env, void_callback, list_buckets_cb);
 }
 
 void create_bucket(storj_env_t *env, PyObject *py_name, PyObject *callback) {
@@ -110,6 +135,17 @@ void delete_bucket(storj_env_t *env, PyObject *py_id, PyObject *callback) {
     void *void_callback = (void *)callback;
     char *id = PyString_AsString(py_id);
     storj_bridge_delete_bucket(env, id, void_callback, delete_bucket_cb);
+}
+
+void list_buckets(storj_env_t *env, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    storj_bridge_get_buckets(env, void_callback, list_buckets_cb);
+}
+
+void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback) {
+    char *bucket_id = PyString_AsString(py_bucket_id);
+    void *void_callback = (void *)callback;
+    storj_bridge_list_files(env, bucket_id, void_callback, list_files_cb);
 }
 
 void run(uv_loop_t *loop) {

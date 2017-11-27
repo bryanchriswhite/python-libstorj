@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from ext import python_libstorj as pystorj
 
+
 class StorjEnv():
     def __init__(self,
                  bridge_options,
@@ -33,15 +34,16 @@ class StorjEnv():
         pystorj.destroy_env(self.env)
 
     def get_info(self, handle):
-        def _handle(error, result):
+        def handle_(error, result):
             result_object = json.loads(result)
             handle(error, result_object)
-        pystorj.get_info(self.env, _handle)
+        pystorj.get_info(self.env, handle_)
         pystorj.run(self.env.loop)
 
     def list_buckets(self, callback=None):
         results = []
-        def _handle(error, buckets):
+
+        def handle_(error, buckets):
             for i, bucket in enumerate(buckets):
                 iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
                 created_date = datetime.strptime(bucket['created'], iso8601_format)
@@ -55,13 +57,14 @@ class StorjEnv():
             if error:
                 raise Exception(error)
 
-        pystorj.list_buckets(self.env, _handle)
+        pystorj.list_buckets(self.env, handle_)
         pystorj.run(self.env.loop)
         return results[1]
 
     def create_bucket(self, name, callback=None):
         results = []
-        def _handle(error, bucket):
+
+        def handle_(error, bucket):
             results.append(error)
             results.append(bucket)
 
@@ -71,13 +74,14 @@ class StorjEnv():
             if error:
                 raise Exception(error)
 
-        pystorj.create_bucket(self.env, name, _handle)
+        pystorj.create_bucket(self.env, name, handle_)
         pystorj.run(self.env.loop)
         return results[1]
 
-    def delete_bucket(self, id, callback=None):
+    def delete_bucket(self, bucket_id, callback=None):
         results = []
-        def _handle(error):
+
+        def handle_(error):
             results.append(error)
 
             if callback:
@@ -86,5 +90,26 @@ class StorjEnv():
             if error:
                 raise Exception(error)
 
-        pystorj.delete_bucket(self.env, id, _handle)
+        pystorj.delete_bucket(self.env, bucket_id, handle_)
         pystorj.run(self.env.loop)
+
+    def list_files(self, bucket_id, callback=None):
+        results = []
+
+        def handle_(error, files):
+            for i, file_ in enumerate(files):
+                iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+                created_date = datetime.strptime(file_['created'], iso8601_format)
+                files[i]['created'] = created_date
+            results.append(error)
+            results.append(files)
+
+            if callback:
+                return callback(*results)
+
+            if error:
+                raise Exception(error)
+
+        pystorj.list_files(self.env, bucket_id, handle_)
+        pystorj.run(self.env.loop)
+        return results[1]

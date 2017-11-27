@@ -24,16 +24,19 @@ int storj_mnemonic_generate(int strength, char **buffer);
 %include "ext/libstorj/src/storj.h"
 %include "python_libstorj.h"
 
-void get_info(storj_env_t *env, PyObject *handle);
-%constant void get_info(storj_env_t *env, PyObject *handle);
+void get_info(storj_env_t *env, PyObject *callback);
+%constant void get_info(storj_env_t *env, PyObject *callback);
 
-void list_buckets(storj_env_t *env, PyObject *handle);
-%constant void list_buckets(storj_env_t *env, PyObject *handle);
-
-void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
-%constant void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
+void create_bucket(storj_env_t *env, PyObject *name, PyObject *callback);
+%constant void create_bucket(storj_env_t *env, PyObject *name, PyObject *callback);
 
 void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
-%constant void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
+%constant void delete_bucket(storj_env_t *env, PyObject *id, PyObject *callback);
+
+void list_buckets(storj_env_t *env, PyObject *callback);
+%constant void list_buckets(storj_env_t *env, PyObject *callback);
+
+void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
+%constant void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
 
 void run(uv_loop_t *loop);
