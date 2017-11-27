@@ -122,8 +122,6 @@ class TestListFiles(TestStorjEnv):
 
     def tearDown(self):
         # TODO: remove file as soon as it's implemented
-        # remove_file_command = 'storj remove-file %s %s' % (self.['id'], 'test.data')
-        # subprocess.call(remove_file_command.split())
         self.env.delete_bucket(self.bucket['id'])
         super(TestListFiles, self).tearDown()
 
