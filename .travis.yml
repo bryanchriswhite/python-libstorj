@@ -1,11 +1,4 @@
-language: python
-python:
-  - '2.7'
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y swig git build-essential libtool autotools-dev automake libmicrohttpd-dev bsdmainutils libcurl4-gnutls-dev libjson-c-dev
-  - sudo bash ./install_libstorj.sh
 install:
-  - pip install -r requirements.txt
+  - docker build -t python_libstorj .
 script:
-  - python -m unittest discover
+  - docker run -ai python_libstorj
