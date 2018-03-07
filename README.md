@@ -41,6 +41,8 @@ Enviroment Setup
     pip install -r ./requirements.txt
     ```
 
+1. [Create a config file](#configuration)
+
 Build
 ---
 Run the build shell script:
