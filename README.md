@@ -55,15 +55,7 @@ Building needs to be done once initially (already done if you're using docker), 
 Configuration
 ---
 1. Copy `tests/options_example.yml` to `tests/options.yml` and edit:
-      + `bridge_options`1. Copy `tests/options_example.yml` to `tests/options.yml` and edit:
       + `bridge_options`
-        - `user`
-        - `pass`
-        - `host` _(if applicable)_
-        - `port` _(if applicable)_
-        - `proto` _(if applicable)_
-      + `encrypt_options`
-        - `mnemonic`
         - `user`
         - `pass`
         - `host` _(if applicable)_
