@@ -7,7 +7,9 @@ COPY ./install_libstorj.sh ./build.sh ./requirements.txt ./setup.py ./setup.cfg 
 COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
 RUN chmod 655 /python_libstorj/install_libstorj.sh
+RUN chmod 655 /python_libstorj/build.sh
 WORKDIR /python_libstorj
 RUN ./install_libstorj.sh
+RUN ./build.sh
 RUN pip install -r ./requirements.txt
 CMD /bin/bash
