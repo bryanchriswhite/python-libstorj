@@ -10,6 +10,6 @@ RUN chmod 655 /python_libstorj/install_libstorj.sh
 RUN chmod 655 /python_libstorj/build.sh
 WORKDIR /python_libstorj
 RUN ./install_libstorj.sh
-RUN ./build.sh
 RUN pip install -r ./requirements.txt
+RUN ./build.sh
 CMD /bin/bash

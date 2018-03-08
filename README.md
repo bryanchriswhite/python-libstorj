@@ -12,13 +12,15 @@ Enviroment Setup
 ---
 
 ### Using Docker
+1. Clone python_libstorj
+    ```
+    git clone https://github.com/Storj/python-libstorj
+    ```
 1. [Create a config file](#configuration)
-
 1. Build the docker image
     ```
     docker build --tag python_libstorj .
     ```
-
 1. Running the container
     ```
     docker run -it \
@@ -28,6 +30,10 @@ Enviroment Setup
     ```
 
 ### Using Virtualenv
+1. Clone python_libstorj
+    ```
+    git clone https://github.com/Storj/python-libstorj
+    ```
 1. Setup a virtualenv
     ```
     virtualenv env
@@ -40,7 +46,6 @@ Enviroment Setup
     ```
     pip install -r ./requirements.txt
     ```
-
 1. [Create a config file](#configuration)
 
 Build
