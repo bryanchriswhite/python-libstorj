@@ -12,12 +12,12 @@ Enviroment Setup
 ---
 
 ### Using Docker
+1. [Create a config file](#configuration)
+
 1. Build the docker image
     ```
     docker build --tag python_libstorj .
     ```
-
-1. [Create a config file](#configuration)
 
 1. Running the container
     ```
