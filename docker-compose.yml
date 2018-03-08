@@ -1,0 +1,14 @@
+version: "2"
+services:
+  python_libstorj:
+    build: .
+    links:
+      - bridge:bridge
+    volumes:
+      - ./lib:/python_libstorj/lib
+      - ./tests:/python_libstorj/tests
+  bridge:
+    image: storjlabs/storj-integration
+    ports:
+     - 6382:6382
+    command: bash -c ./scripts/start_everything.sh && pm2 logs -f
