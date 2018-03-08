@@ -7,8 +7,13 @@ git clone https://github.com/storj/libstorj $libstorj_dir
 
 cd $libstorj_dir && \
 ./autogen.sh && \
-./configure
+./configure && \
 make && \
-make install
-ldconfig
+if [ $(whoami) == "root" ]; then
+    make install
+    ldconfig
+else
+    sudo make install
+    sudo ldconfig
+fi
 

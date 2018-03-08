@@ -1,4 +1,4 @@
 install:
   - docker build -t python_libstorj .
 script:
-  - docker run -ai python_libstorj
+  - docker run -it python_libstorj python -m unittest discover
