@@ -10,4 +10,5 @@ cd $libstorj_dir && \
 ./configure
 make && \
 make install
+ldconfig
 
