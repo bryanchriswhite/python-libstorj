@@ -23,7 +23,7 @@ Enviroment Setup
     ```
     docker run -it \
         -v $(pwd)/lib:/python_libstorj/lib \
-        -v $(pwd)/tests:/python_testsstorj/tests \
+        -v $(pwd)/tests:/python_libstorj/tests \
         python_libstorj
     ```
 
