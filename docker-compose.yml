@@ -3,7 +3,7 @@ services:
   python_libstorj:
     build: .
     links:
-      - bridge:bridge
+      - bridge
     volumes:
       - ./lib:/python_libstorj/lib
       - ./tests:/python_libstorj/tests
@@ -11,4 +11,4 @@ services:
     image: storjlabs/storj-integration
     ports:
      - 6382:6382
-    command: bash -c ./scripts/start_everything.sh && pm2 logs -f
+    command: bash -c ". /root/.nvm/nvm.sh && ./scripts/start_everything.sh && /bin/sleep infinity"
