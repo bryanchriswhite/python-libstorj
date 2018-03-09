@@ -1,0 +1,16 @@
+bridge_options:
+    proto: http
+    host: bridge
+    port: 6382
+    user: username
+    pass: password
+encrypt_options:
+    mnemonic: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
+http_options:
+    user_agent: curl/7.52.1
+    low_speed_limit: 30720
+    low_speed_time: 20
+    timeout: 60
+log_options:
+    level: 4
+
