@@ -66,7 +66,9 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
 1. Run `python_libstorj`
     ```
     # See https://docs.docker.com/compose/reference/
-    docker-compose run #get a shell in a `python_libstorj` container
+
+    # Get a shell in a `python_libstorj` container
+    docker-compose run
 
     #   Because the composition `links` the `bridge` service, docker-compose
     #   should ensure that `bridge` is running and port-forwarded for use
@@ -78,12 +80,17 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
 ### Using [Docker](https://www.docker.com/what-docker)
 1. [Clone python_libstorj](#clone-python_libstorj)
 1. [Create a config file](#configuration)
-1. Build the docker image [`docker build`]()
+1. Build the docker image
     ```
+    # See https://docs.docker.com/engine/reference/commandline/build/
+
     docker build --tag python_libstorj .
     ```
 1. Running the container
     ```
+    # See https://docs.docker.com/engine/reference/run/
+    #     https://docs.docker.com/engine/reference/run/#volume-shared-filesystems
+
     docker run -it \
         -v $(pwd)/lib:/python_libstorj/lib \
         -v $(pwd)/tests:/python_libstorj/tests \
