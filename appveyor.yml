@@ -2,6 +2,6 @@ install:
   - choco install docker-compose
   - cp tests/options.docker_compose_example.yml tests/options.yml
   - docker-compose build
-script:
+build_script:
   - "echo 'TODO: run user creation script'"
   - docker-compose run python_libstorj bash -c "./build.sh && python -m unittest discover"
