@@ -1,6 +1,8 @@
 `python_libstorj`
 ===
 [![Build Status](https://travis-ci.org/Storj/python-libstorj.svg?branch=master)](https://travis-ci.org/Storj/python-libstorj)
+[![Build status](https://ci.appveyor.com/api/projects/status/e50iy5ciylqr01x8?svg=true)](https://ci.appveyor.com/project/bryanchriswhite/python-libstorj)
+
 
 Dependencies
 ---
@@ -39,7 +41,7 @@ These different environments aren't necessarily mutually exclusive; you can choo
 Using docker compose is a convenient way to get into a completely ready to go environment.
 The composition uses the [`storjlabs/storj-integration`](https://github.com/Storj/integration) image which runs a complete mini storj backend:
 
-_Brirge (1x), Bridge-monitor(1x), Renters (6x), Farmers (16x)_
+_Bridge (1x), Bridge-monitor(1x), Renters (6x), Farmers (16x)_
 
 You can use the [`docker-compose.yml`](./docker-compose.yml) as a starting point for building a custom docker environment with `python_libstorj` installed *and* built from source.
 This is ideal for use as a development environment for `python_libstorj`, for example.
