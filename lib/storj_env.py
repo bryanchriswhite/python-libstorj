@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 from ext import python_libstorj as pystorj
+from ext.upload_options import UploadOptions
 
 
 class StorjEnv():
@@ -30,6 +31,15 @@ class StorjEnv():
         self.env = pystorj.init_env(*options)
         self.env.loop = pystorj.set_loop(self.env)
 
+    def _error_check(self, results):
+        try:
+            result = results[0]
+            if type(result) is Exception:
+                raise result
+            return result
+        except IndexError:
+            return None
+
     def destroy(self):
         pystorj.destroy_env(self.env)
 
@@ -37,18 +47,22 @@ class StorjEnv():
         results = []
 
         def handle_(error, result):
-            info = json.loads(result)
-            results.append(info)
+            # NB: method executes in a separate C thread!
+            info = None
+            try:
+                info = json.loads(result)
+                results.append(info)
+            finally:
+                if error is not None:
+                    error = Exception(error)
+                    results.append(error)
 
-            if callback is not None:
-                callback(error, info)
-
-            if error is not None:
-                raise Exception(error)
+                if callback is not None:
+                    callback(error, info)
 
         pystorj.get_info(self.env, handle_)
         pystorj.run(self.env.loop)
-        return results[0]
+        return self._error_check(results)
 
     def list_buckets(self, callback=None):
         results = []
@@ -76,15 +90,16 @@ class StorjEnv():
         def handle_(error, bucket):
             results.append(bucket)
 
-            if callback is not None:
-                return callback(error, bucket)
-
             if error is not None:
-                raise Exception(error)
+                error = Exception(error)
+                results.append(error)
+
+            if callback is not None:
+                callback(error, bucket)
 
         pystorj.create_bucket(self.env, name, handle_)
         pystorj.run(self.env.loop)
-        return results[0]
+        return self._errorCheck(results)
 
     def delete_bucket(self, bucket_id, callback=None):
         def handle_(error):
@@ -116,3 +131,31 @@ class StorjEnv():
         pystorj.list_files(self.env, bucket_id, handle_)
         pystorj.run(self.env.loop)
         return results[0]
+
+    def store_file(self,
+                   bucket_id,
+                   file_path,
+                   options=None,
+                   progress_callback=None,
+                   finished_callback=None):
+        results = []
+
+        def progress_callback_(progress, bytes, total_bytes):
+            if progress_callback is not None:
+                progress_callback(progress, bytes, total_bytes)
+
+        def finished_callback_(status, file_id):
+            # TODO: error handling based on `status`
+            results.append(file_id)
+
+            if finished_callback is not None:
+                finished_callback(status, file_id)
+
+            # if error is not None:
+            #     raise Exception(error)
+
+        upload_options = UploadOptions(bucket_id, file_path, options)
+        pystorj.store_file(self.env,
+                           upload_options,
+                           progress_callback_,
+                           finished_callback_)

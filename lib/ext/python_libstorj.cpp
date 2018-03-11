@@ -120,6 +120,38 @@ void list_files_cb(uv_work_t *work_req, int status) {
     PyObject_CallObject(_handle, args_tuple);
 }
 
+void store_file_progress_callback_cb(double progress,
+                                     uint64_t bytes,
+                                     uint64_t total_bytes,
+                                     void *handle) {
+    printf("HELLO FROM #store_file_progress_callback!\n");
+    PyObject *py_handle = (PyObject *)handle;
+    PyObject *py_progress_callback = Py_None;
+    PyObject *py_finished_callback = Py_None;
+    int parse_status = PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
+    printf("parse_status: %i\n", parse_status);
+
+    printf("calling function...\n");
+    PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
+    printf("done\n");
+}
+
+void store_file_finished_callback_cb(int error_status,
+                                     storj_file_meta_t *file,
+                                     void *handle) {
+    printf("HELLO FROM #store_file_finished_callback!\n");
+    PyObject *py_handle = (PyObject *)handle;
+    PyObject *py_progress_callback = Py_None;
+    PyObject *py_finished_callback = Py_None;
+    PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
+
+    printf("calling function...\n");
+    PyObject_CallFunction(py_finished_callback, "is", error_status, file->id);
+    printf("done\n");
+    Py_DECREF(py_progress_callback);
+    Py_DECREF(py_finished_callback);
+}
+
 void get_info(storj_env_t *env, PyObject *callback) {
     void *void_callback = (void *)callback;
     storj_bridge_get_info(env, void_callback, get_info_cb);
@@ -146,6 +178,24 @@ void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback) {
     char *bucket_id = PyString_AsString(py_bucket_id);
     void *void_callback = (void *)callback;
     storj_bridge_list_files(env, bucket_id, void_callback, list_files_cb);
+}
+
+storj_upload_state_t* store_file(storj_env_t *env,
+                storj_upload_opts_t *upload_options,
+                PyObject *py_progress_callback,
+                PyObject *py_finished_callback) {
+    Py_INCREF(py_progress_callback);
+    Py_INCREF(py_finished_callback);
+    printf("HELLO FROM #store_file!\n");
+    PyObject *py_handle = Py_BuildValue("(OO)", py_progress_callback, py_finished_callback);
+    void *handle = (void *)py_handle;
+    storj_upload_state_t *upload_state;
+    upload_state = storj_bridge_store_file(env,
+                                             upload_options,
+                                             handle,
+                                             store_file_progress_callback_cb,
+                                             store_file_finished_callback_cb);
+    return upload_state;
 }
 
 void run(uv_loop_t *loop) {
