@@ -61,7 +61,9 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
 1. Edit `docker-compose.yml` _(optional)_
 
     Have a look at:
-    [ [`volumes`](https://docs.docker.com/compose/compose-file/compose-file-v2/#volume-configuration-reference) | [`command`](https://docs.docker.com/compose/compose-file/compose-file-v2/#command) | [`links`](https://docs.docker.com/compose/compose-file/compose-file-v2/#links) | [`ports`](https://docs.docker.com/compose/compose-file/compose-file-v2/#ports) ]
+    [ [`environment`](https://docs.docker.com/compose/compose-file/compose-file-v2/#environment) | [`volumes`](https://docs.docker.com/compose/compose-file/compose-file-v2/#volume-configuration-reference) | [`command`](https://docs.docker.com/compose/compose-file/compose-file-v2/#command) | [`links`](https://docs.docker.com/compose/compose-file/compose-file-v2/#links) | [`ports`](https://docs.docker.com/compose/compose-file/compose-file-v2/#ports) ]
+
+    Note: `STORJ_BRIDGE` and `STORJ_KEYPASS` environment variables; see [`libstorj`]() for more info - _(these currently only apply to the `libstorj` cli)_.
 
 1. Run `python_libstorj`
     ```
