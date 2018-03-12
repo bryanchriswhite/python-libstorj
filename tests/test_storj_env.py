@@ -87,47 +87,50 @@ class TestGetInfoFailure(TestStorjEnvBadHost):
         self.assertRaisesWithBadHost(self.env.get_info, callback)
 
 
-# class TestCreateDeleteSuccess(TestStorjEnv):
-#     def test_create_bucket_without_callback_success(self):
-#         bucket_name = 'python_libstorj-test2'
-#
-#         bucket = self.env.create_bucket(bucket_name)
-#         self.assertEqual(bucket['name'], bucket_name)
-#
-#     def test_create_bucket_with_callback_success(self):
-#         bucket_name = 'python_libstorj-test'
-#         results = []
-#
-#         def callback(error_, bucket_):
-#             results.append(error_)
-#             results.append(bucket_)
-#
-#         self.env.create_bucket(bucket_name, callback)
-#         error, bucket = results
-#         self.assertEqual(error, None)
-#         self.assertEqual(bucket['name'], bucket_name)
-#
-#     def test_delete_bucket_without_callback_success(self):
-#         bucket_name = self.get_bucket_id('python_libstorj-test2')
-#
-#         self.env.delete_bucket(bucket_name)
-#
-#     def test_delete_bucket_with_callback_success(self):
-#         bucket_name = self.get_bucket_id('python_libstorj-test')
-#         results = []
-#
-#         def callback(error_):
-#             results.append(error_)
-#
-#         self.env.delete_bucket(bucket_name, callback)
-#         error = results[0]
-#         self.assertEqual(error, None)
+class TestCreateDeleteSuccess(TestStorjEnv):
+    def test_create_bucket_without_callback_success(self):
+        bucket_name = 'python_libstorj-test2'
+
+        bucket = self.env.create_bucket(bucket_name)
+        self.assertEqual(bucket['name'], bucket_name)
+
+    def test_create_bucket_with_callback_success(self):
+        bucket_name = 'python_libstorj-test'
+        results = []
+
+        def callback(error_, bucket_):
+            results.append(error_)
+            results.append(bucket_)
+
+        self.env.create_bucket(bucket_name, callback)
+        error, bucket = results
+        self.assertEqual(error, None)
+        self.assertEqual(bucket['name'], bucket_name)
+
+    # def test_delete_bucket_without_callback_success(self):
+    #     bucket_name = self.get_bucket_id('python_libstorj-test2')
+    #
+    #     self.env.delete_bucket(bucket_name)
+    #
+    # def test_delete_bucket_with_callback_success(self):
+    #     bucket_name = self.get_bucket_id('python_libstorj-test')
+    #     results = []
+    #
+    #     def callback(error):
+    #         results['error'] = error
+    #
+    #     self.env.delete_bucket(bucket_name, callback)
+    #     try:
+    #         error = results[0]
+    #         self.assertBadHostError(error)
+    #     except IndexError:
+    #         self.fail('Callback not called!')
 
 
 class TestCreateBucketFailure(TestStorjEnvBadHost):
     def test_create_bucket_without_callback_failure(self):
         bucket_name = 'python_libstorj-test2'
-        self.assertRaises(Exception, self.env.create_bucket, bucket_name)
+        self.assertRaisesWithBadHost(self.env.create_bucket, bucket_name)
 
     def test_create_bucket_with_callback_failure(self):
         bucket_name = 'python_libstorj-test'
@@ -147,14 +150,14 @@ class TestCreateBucketFailure(TestStorjEnvBadHost):
             self.fail('Callback not called!')
 
 
-# class TestListBuckets(TestStorjEnv):
+# class TestListBucketsSuccess(TestStorjEnv):
 #     def setUp(self):
-#         super(TestListBuckets, self).setUp()
+#         super(TestListBucketsSuccess, self).setUp()
 #         self.bucket = self.env.create_bucket('python_libstorj-test3')
 #
 #     def tearDown(self):
 #         self.env.delete_bucket(self.bucket['id'])
-#         super(TestListBuckets, self).tearDown()
+#         super(TestListBucketsSuccess, self).tearDown()
 #
 #     def test_list_buckets_without_callback(self):
 #         bucket_name = 'python_libstorj-test3'

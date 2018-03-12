@@ -93,6 +93,8 @@ class StorjEnv():
                 results.append(bucket)
 
             if error is not None:
+                if error == 'Unknown error':
+                    error = '%s: possible authentication error' % error
                 error = Exception(error)
                 results.append(error)
 
