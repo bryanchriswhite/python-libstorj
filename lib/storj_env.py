@@ -31,7 +31,8 @@ class StorjEnv():
         self.env = pystorj.init_env(*options)
         self.env.loop = pystorj.set_loop(self.env)
 
-    def _error_check(self, results):
+    @staticmethod
+    def _error_check(results):
         try:
             result = results[0]
             if type(result) is Exception:
@@ -46,7 +47,7 @@ class StorjEnv():
     def get_info(self, callback=None):
         results = []
 
-        def handle_(error, result):
+        def handle(error, result):
             # NB: method executes in a separate C thread!
             info = None
             try:
@@ -60,7 +61,7 @@ class StorjEnv():
                 if callback is not None:
                     callback(error, info)
 
-        pystorj.get_info(self.env, handle_)
+        pystorj.get_info(self.env, handle)
         pystorj.run(self.env.loop)
         return self._error_check(results)
 
@@ -87,8 +88,9 @@ class StorjEnv():
     def create_bucket(self, name, callback=None):
         results = []
 
-        def handle_(error, bucket):
-            results.append(bucket)
+        def handle(error, bucket):
+            if bucket is not None:
+                results.append(bucket)
 
             if error is not None:
                 error = Exception(error)
@@ -97,9 +99,9 @@ class StorjEnv():
             if callback is not None:
                 callback(error, bucket)
 
-        pystorj.create_bucket(self.env, name, handle_)
+        pystorj.create_bucket(self.env, name, handle)
         pystorj.run(self.env.loop)
-        return self._errorCheck(results)
+        return self._error_check(results)
 
     def delete_bucket(self, bucket_id, callback=None):
         def handle_(error):

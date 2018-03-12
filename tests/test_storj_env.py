@@ -1,12 +1,33 @@
 import sys, subprocess, yaml, re, unittest
 from os import path
 from datetime import datetime
-import lib.ext.python_libstorj as pystorj
 from lib.storj_env import StorjEnv
 sys.path.append('..')
 
 
-class TestStorjEnv(unittest.TestCase):
+class UtilityTestCase(unittest.TestCase):
+    BAD_HOST_ERROR = Exception("Couldn't resolve host name")
+
+    def assertExceptionEqual(self, error1, error2):
+        self.assertEqual(type(error1), type(error2))
+        self.assertEqual(error1.message, error2.message)
+
+    def assertBadHostError(self, error):
+        self.assertExceptionEqual(error, self.BAD_HOST_ERROR)
+
+    def assertRaisesWithMessage(self, msg, func, *args, **kwargs):
+        try:
+            func(*args, **kwargs)
+            self.assertFail()
+        except Exception as error:
+            self.assertEqual(error.message, msg)
+
+    def assertRaisesWithBadHost(self, func, *args, **kwargs):
+        message = self.BAD_HOST_ERROR.message
+        self.assertRaisesWithMessage(message, func, *args, **kwargs)
+
+
+class TestStorjEnv(UtilityTestCase):
     def setUp(self):
         options_path = path.join(path.dirname(path.realpath(__file__)), 'options.yml')
         with open(options_path, 'r') as options_file:
@@ -22,7 +43,7 @@ class TestStorjEnv(unittest.TestCase):
         return next(bucket['id'] for bucket in buckets if bucket['name'] == name)
 
 
-class TestStorjEnvBadHost(unittest.TestCase):
+class TestStorjEnvBadHost(UtilityTestCase):
     def setUp(self):
         options_path = path.join(path.dirname(path.realpath(__file__)), 'options.yml')
         with open(options_path, 'r') as options_file:
@@ -57,23 +78,23 @@ class TestGetInfoSuccess(TestStorjEnv):
 
 class TestGetInfoFailure(TestStorjEnvBadHost):
     def test_get_info_without_callback_failure(self):
-        self.assertRaises(Exception, self.env.get_info)
+        self.assertRaisesWithBadHost(self.env.get_info)
 
     def test_get_info_with_callback_failure(self):
         def callback():
             return None
 
-        self.assertRaises(Exception, self.env.get_info, callback)
+        self.assertRaisesWithBadHost(self.env.get_info, callback)
 
 
 # class TestCreateDeleteSuccess(TestStorjEnv):
-#     def test_create_bucket_without_callback(self):
+#     def test_create_bucket_without_callback_success(self):
 #         bucket_name = 'python_libstorj-test2'
 #
 #         bucket = self.env.create_bucket(bucket_name)
 #         self.assertEqual(bucket['name'], bucket_name)
 #
-#     def test_create_bucket_with_callback(self):
+#     def test_create_bucket_with_callback_success(self):
 #         bucket_name = 'python_libstorj-test'
 #         results = []
 #
@@ -86,12 +107,12 @@ class TestGetInfoFailure(TestStorjEnvBadHost):
 #         self.assertEqual(error, None)
 #         self.assertEqual(bucket['name'], bucket_name)
 #
-#     def test_delete_bucket_without_callback(self):
+#     def test_delete_bucket_without_callback_success(self):
 #         bucket_name = self.get_bucket_id('python_libstorj-test2')
 #
 #         self.env.delete_bucket(bucket_name)
 #
-#     def test_delete_bucket_with_callback(self):
+#     def test_delete_bucket_with_callback_success(self):
 #         bucket_name = self.get_bucket_id('python_libstorj-test')
 #         results = []
 #
@@ -101,7 +122,7 @@ class TestGetInfoFailure(TestStorjEnvBadHost):
 #         self.env.delete_bucket(bucket_name, callback)
 #         error = results[0]
 #         self.assertEqual(error, None)
-#
+
 
 class TestCreateBucketFailure(TestStorjEnvBadHost):
     def test_create_bucket_without_callback_failure(self):
@@ -110,10 +131,20 @@ class TestCreateBucketFailure(TestStorjEnvBadHost):
 
     def test_create_bucket_with_callback_failure(self):
         bucket_name = 'python_libstorj-test'
-        def callback():
-            return None
+        results = {}
 
-        self.assertRaises(Exception, self.env.create_bucket, bucket_name, callback)
+        def callback(error, bucket):
+            results['bucket'] = bucket
+            results['error'] = error
+
+        self.assertRaisesWithBadHost(self.env.create_bucket, bucket_name, callback)
+        try:
+            error, bucket = [results[k] for k in ('error', 'bucket')]
+
+            self.assertIsNone(bucket)
+            self.assertBadHostError(error)
+        except KeyError as key:
+            self.fail('Callback not called!')
 
 
 # class TestListBuckets(TestStorjEnv):
