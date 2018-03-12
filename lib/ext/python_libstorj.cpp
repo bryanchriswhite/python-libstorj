@@ -6,12 +6,14 @@
 
 template <typename ReqType>
 bool error_and_status_check(ReqType *req, char **error) {
-    char *_error = NULL;
     if (req->error_code) {
         *error = (char *)curl_easy_strerror((CURLcode)req->error_code);
     } else if (req->status_code > 399) {
-        *error = storj_strerror(req->status_code);
+        char *storj_error = storj_strerror(req->status_code);
+        // TODO: should this be 254 or is 255 okay?
+        snprintf(*error, 254, "%s: status code %i", storj_error, req->status_code);
     } else {
+        *error = NULL;
         return true;
     }
 
@@ -19,7 +21,7 @@ bool error_and_status_check(ReqType *req, char **error) {
 }
 
 void get_info_cb(uv_work_t *work_req, int status) {
-    char *error = NULL;
+    char *error = (char *)calloc(255, sizeof(char));
     char *result = NULL;
     json_request_t *req = (json_request_t *)work_req->data;
     PyObject *_handle = (PyObject *)req->handle;
@@ -32,7 +34,7 @@ void get_info_cb(uv_work_t *work_req, int status) {
 }
 
 void create_bucket_cb(uv_work_t *work_req, int status) {
-    char *error_str = NULL;
+    char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *error = Py_None;
     PyObject *bucket = Py_None;
     create_bucket_request_t *req = (create_bucket_request_t *)work_req->data;
@@ -54,7 +56,7 @@ void create_bucket_cb(uv_work_t *work_req, int status) {
 }
 
 void delete_bucket_cb(uv_work_t *work_req, int status) {
-    char *error_str = NULL;
+    char *error_str = (char *)calloc(255, sizeof(char));
     json_request_t *req = (json_request_t *)work_req->data;
     PyObject *_handle = (PyObject *)req->handle;
 
@@ -63,7 +65,7 @@ void delete_bucket_cb(uv_work_t *work_req, int status) {
 }
 
 void list_buckets_cb(uv_work_t *work_req, int status) {
-    char *error_str = NULL;
+    char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *error = Py_None;
     PyObject *bucket_list = Py_None;
     get_buckets_request_t *req = (get_buckets_request_t *)work_req->data;
@@ -91,7 +93,7 @@ void list_buckets_cb(uv_work_t *work_req, int status) {
 }
 
 void list_files_cb(uv_work_t *work_req, int status) {
-    char *error_str = NULL;
+    char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *error = Py_None;
     PyObject *file_list = Py_None;
     list_files_request_t *req = (list_files_request_t *)work_req->data;
