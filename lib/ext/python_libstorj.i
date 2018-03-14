@@ -38,6 +38,9 @@ void create_bucket(storj_env_t *env, PyObject *name, PyObject *callback);
 void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
 %constant void delete_bucket(storj_env_t *env, PyObject *id, PyObject *callback);
 
+void get_bucket_id(storj_env_t *env, PyObject *name, PyObject *handle);
+%constant void get_bucket_id(storj_env_t *env, PyObject *name, PyObject *callback);
+
 void list_buckets(storj_env_t *env, PyObject *callback);
 %constant void list_buckets(storj_env_t *env, PyObject *callback);
 

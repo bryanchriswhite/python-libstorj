@@ -134,6 +134,24 @@ class StorjEnv():
         pystorj.run(self.env.loop)
         return self._error_check(results)
 
+    def get_bucket_id(self, bucket_name, callback=None):
+        results = {}
+
+        def handle(error, bucket):
+            if bucket is not None:
+                results['data'] = bucket
+
+            if error is not None:
+                error = Exception(error)
+                results['error'] = error
+
+            if callback is not None:
+                callback(error, bucket)
+
+        pystorj.get_bucket_id(self.env, bucket_name, handle)
+        pystorj.run(self.env.loop)
+        return self._error_check(results)
+
     def delete_file(self, bucket_id, file_id, callback=None):
         results = []
 

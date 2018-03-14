@@ -9,6 +9,8 @@ void create_bucket(storj_env_t *env, PyObject *name, PyObject *handle);
 void create_bucket_cb(uv_work_t *work_req, int status);
 void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
 void delete_bucket_cb(uv_work_t *work_req, int status);
+void get_bucket_id(storj_env_t *env, PyObject *name, PyObject *handle);
+void get_bucket_id_cb(uv_work_t *work_req, int status);
 void list_buckets(storj_env_t *env, PyObject *handle);
 void list_buckets_cb(uv_work_t *work_req, int status);
 void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *handle);

@@ -73,6 +73,37 @@ void delete_file_cb(uv_work_t *work_req, int status) {
     PyObject_CallFunction(_handle, "s", error_str);
 }
 
+void get_bucket_id_cb(uv_work_t *work_req, int status) {
+    char *error_str = (char *)calloc(255, sizeof(char));
+    PyObject *error = Py_None;
+    get_bucket_id_request_t *req = (get_bucket_id_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    PyObject *bucket_dict = PyDict_New();
+    if (error_and_status_check<get_bucket_id_request_t>(req, &error_str)) {
+        PyDict_SetItemString(bucket_dict, "name", PyString_FromString(req->bucket_name));
+        PyDict_SetItemString(bucket_dict, "id", PyString_FromString(req->bucket_id));
+        // TODO: manage encrypted bucket name
+
+        //bucket_list = PyList_New(req->total_buckets);
+        //for (uint8_t i=0; i<req->total_buckets; i++) {
+        //    PyObject *bucket_dict = PyDict_New();
+        //    PyDict_SetItemString(bucket_dict,"name", PyString_FromString(req->buckets[i].name));
+        //    PyDict_SetItemString(bucket_dict,"id", PyString_FromString(req->buckets[i].id));
+        //    PyDict_SetItemString(bucket_dict,"decrypted", PyBool_FromLong((long)req->buckets[i].decrypted));
+        //    PyDict_SetItemString(bucket_dict,"created", PyString_FromString(req->buckets[i].created));
+        //    PyList_SetItem(bucket_list, i, bucket_dict);
+        //}
+    } else {
+        error = PyString_FromString(error_str);
+    }
+
+    PyObject *args_tuple = PyTuple_New(2);
+    PyTuple_SetItem(args_tuple, 0, error);
+    PyTuple_SetItem(args_tuple, 1, bucket_dict);
+    PyObject_CallObject(_handle, args_tuple);
+}
+
 void list_buckets_cb(uv_work_t *work_req, int status) {
     char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *error = Py_None;
@@ -178,6 +209,12 @@ void delete_bucket(storj_env_t *env, PyObject *py_id, PyObject *callback) {
     void *void_callback = (void *)callback;
     char *id = PyString_AsString(py_id);
     storj_bridge_delete_bucket(env, id, void_callback, delete_bucket_cb);
+}
+
+void get_bucket_id(storj_env_t *env, PyObject *name, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    char *bucket_name = PyString_AsString(name);
+    storj_bridge_get_bucket_id(env, bucket_name, void_callback, get_bucket_id_cb);
 }
 
 void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *callback) {
