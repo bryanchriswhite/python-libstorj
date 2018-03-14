@@ -41,6 +41,9 @@ void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
 void list_buckets(storj_env_t *env, PyObject *callback);
 %constant void list_buckets(storj_env_t *env, PyObject *callback);
 
+void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *handle);
+%constant void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *callback);
+
 void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
 %constant void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
 

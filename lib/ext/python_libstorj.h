@@ -11,6 +11,8 @@ void delete_bucket(storj_env_t *env, PyObject *id, PyObject *handle);
 void delete_bucket_cb(uv_work_t *work_req, int status);
 void list_buckets(storj_env_t *env, PyObject *handle);
 void list_buckets_cb(uv_work_t *work_req, int status);
+void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *handle);
+void delete_file_cb(uv_work_t *work_req, int status);
 void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
 void list_files_cb(uv_work_t *work_req, int status);
 //void store_file_progress_callback_cb(double progress, uint64_t bytes, uint64_t total_bytes, void *handle);

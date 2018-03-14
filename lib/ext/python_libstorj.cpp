@@ -64,6 +64,15 @@ void delete_bucket_cb(uv_work_t *work_req, int status) {
     PyObject_CallFunction(_handle, "s", error_str);
 }
 
+void delete_file_cb(uv_work_t *work_req, int status) {
+    char *error_str = (char *)calloc(255, sizeof(char));
+    json_request_t *req = (json_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    error_and_status_check<json_request_t>(req, &error_str);
+    PyObject_CallFunction(_handle, "s", error_str);
+}
+
 void list_buckets_cb(uv_work_t *work_req, int status) {
     char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *error = Py_None;
@@ -169,6 +178,13 @@ void delete_bucket(storj_env_t *env, PyObject *py_id, PyObject *callback) {
     void *void_callback = (void *)callback;
     char *id = PyString_AsString(py_id);
     storj_bridge_delete_bucket(env, id, void_callback, delete_bucket_cb);
+}
+
+void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    char *idbucket = PyString_AsString(bucket_id);
+    char *idfile = PyString_AsString(file_id);
+    storj_bridge_delete_file(env, idbucket, idfile, void_callback, delete_bucket_cb);
 }
 
 void list_buckets(storj_env_t *env, PyObject *callback) {
