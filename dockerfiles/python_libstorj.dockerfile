@@ -4,7 +4,7 @@ FROM storjlabs/storj-integration:swig-python-libstorj
 RUN mkdir /python_libstorj
 
 # copy scripts and source
-COPY ./install_libstorj.sh ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
+COPY ./dockerfiles/install_libstorj.sh ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
 COPY ./dockerfiles/setup_user /python_libstorj/setup_user
 COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
