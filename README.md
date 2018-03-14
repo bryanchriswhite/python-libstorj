@@ -86,7 +86,7 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
     ```
     # See https://docs.docker.com/engine/reference/commandline/build/
 
-    docker build --tag python_libstorj ./dockerfiles/python_libstorj.dockerfile
+    docker build --tag python_libstorj -f ./dockerfiles/python_libstorj.dockerfile .
     ```
 1. Running the container
     ```
