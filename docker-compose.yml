@@ -1,14 +1,25 @@
 version: "2"
 services:
   python_libstorj:
-    build: .
+    build:
+      context: .
+      dockerfile: ./dockerfiles/python_libstorj.dockerfile
+    environment:
+      STORJ_BRIDGE: http://bridge:6382
     links:
       - bridge
     volumes:
       - ./lib:/python_libstorj/lib
       - ./tests:/python_libstorj/tests
   bridge:
-    image: storjlabs/storj-integration
+    build:
+      context: .
+      dockerfile: ./dockerfiles/bridge.dockerfile
+      args:
+        - STORJ_EMAIL
+        - STORJ_PASS
+        - STORJ_KEYPASS
+        - STORJ_MNEMONIC
     environment:
       STORJ_BRIDGE: http://bridge:6382
       STORJ_KEYPASS:

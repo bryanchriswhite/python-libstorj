@@ -10,13 +10,15 @@ RUN apt install -yqq swig git python-pip
 RUN apt install -yqq vim gdb
 
 # copy scripts and source
-COPY ./install_libstorj.sh ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
+COPY ./dockerfiles/install_libstorj.sh ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
+COPY ./dockerfiles/setup_user /python_libstorj/setup_user
 COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
 
 # modify file permissions
-RUN chmod 655 /python_libstorj/install_libstorj.sh
-RUN chmod 655 /python_libstorj/build.sh
+RUN chmod 655 /python_libstorj/{*,setup-user/}.sh
+WORKDIR /python_libstorj/setup_user
+RUN ./import_keys.sh
 
 # install libstorj, python dependencies, and build python_libstorj
 WORKDIR /python_libstorj
