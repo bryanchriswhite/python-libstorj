@@ -1,10 +1,5 @@
-FROM storjlabs/storj-integration
+FROM storjlabs/storj-integration:swig-python-libstorj
 
-RUN apt update -qq
-RUN apt install -yqq expect
-RUN apt install -yqq build-essential libtool autotools-dev automake libuv1-dev libmicrohttpd-dev bsdmainutils libcurl4-gnutls-dev libjson-c-dev nettle-dev curl
-
-COPY ./dockerfiles/install_libstorj.sh /root/scripts/install_libstorj.sh
 COPY ./dockerfiles/setup_user /root/scripts/setup_user
 
 # setup env variables
