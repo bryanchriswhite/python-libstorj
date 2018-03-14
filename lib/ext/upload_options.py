@@ -3,16 +3,21 @@ import python_libstorj as pystorj
 
 
 class UploadOptions(pystorj.storj_upload_opts_t):
+
     def __init__(self, bucket_id=None, file_path=None, options=None):
         super(UploadOptions, self).__init__()
 
-        bucket_id_, \
-        file_path_, \
-        file_name, \
-        index = [options.get(k, None) for k in ('bucket_id',
-                                                'file_path',
-                                                'file_name',
-                                                'index')]
+        if options is not None:
+            bucket_id_, \
+            file_path_, \
+            file_name, \
+            index = [options.get(k, None) for k in ('bucket_id',
+                                                    'file_path',
+                                                    'file_name',
+                                                    'index')]
+        else:
+            bucket_id_, file_path_, file_name, index = None, None, None, None
+
         # NB: default to options
         bucket_id = bucket_id_ or bucket_id
         file_path = file_path_ or file_path

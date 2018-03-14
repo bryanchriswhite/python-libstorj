@@ -64,15 +64,6 @@ void delete_bucket_cb(uv_work_t *work_req, int status) {
     PyObject_CallFunction(_handle, "s", error_str);
 }
 
-void delete_file_cb(uv_work_t *work_req, int status) {
-    char *error_str = (char *)calloc(255, sizeof(char));
-    json_request_t *req = (json_request_t *)work_req->data;
-    PyObject *_handle = (PyObject *)req->handle;
-
-    error_and_status_check<json_request_t>(req, &error_str);
-    PyObject_CallFunction(_handle, "s", error_str);
-}
-
 void get_bucket_id_cb(uv_work_t *work_req, int status) {
     char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *error = Py_None;
@@ -130,6 +121,15 @@ void list_buckets_cb(uv_work_t *work_req, int status) {
     PyTuple_SetItem(args_tuple, 0, error);
     PyTuple_SetItem(args_tuple, 1, bucket_list);
     PyObject_CallObject(_handle, args_tuple);
+}
+
+void delete_file_cb(uv_work_t *work_req, int status) {
+    char *error_str = (char *)calloc(255, sizeof(char));
+    json_request_t *req = (json_request_t *)work_req->data;
+    PyObject *_handle = (PyObject *)req->handle;
+
+    error_and_status_check<json_request_t>(req, &error_str);
+    PyObject_CallFunction(_handle, "s", error_str);
 }
 
 void list_files_cb(uv_work_t *work_req, int status) {
@@ -217,16 +217,16 @@ void get_bucket_id(storj_env_t *env, PyObject *name, PyObject *callback) {
     storj_bridge_get_bucket_id(env, bucket_name, void_callback, get_bucket_id_cb);
 }
 
+void list_buckets(storj_env_t *env, PyObject *callback) {
+    void *void_callback = (void *)callback;
+    storj_bridge_get_buckets(env, void_callback, list_buckets_cb);
+}
+
 void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *callback) {
     void *void_callback = (void *)callback;
     char *idbucket = PyString_AsString(bucket_id);
     char *idfile = PyString_AsString(file_id);
     storj_bridge_delete_file(env, idbucket, idfile, void_callback, delete_bucket_cb);
-}
-
-void list_buckets(storj_env_t *env, PyObject *callback) {
-    void *void_callback = (void *)callback;
-    storj_bridge_get_buckets(env, void_callback, list_buckets_cb);
 }
 
 void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback) {
