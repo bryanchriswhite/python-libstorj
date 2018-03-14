@@ -233,41 +233,41 @@ class TestListBucketsFailure(TestStorjEnvBadHost):
             self.fail('Callback not called!')
 
 
-class TestListFilesSuccess(TestStorjEnv):
-    def setUp(self):
-        self.file_name = 'test.data'
-        super(TestListFilesSuccess, self).setUp()
-        file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
-        self.bucket = self.env.create_bucket('python_libstorj-test4')
-        upload_file_command = 'storj upload-file %s %s' % (self.bucket['id'], file_path)
-        # NB: `stdout=subprocess.PIPE` prevents subprocess
-        #     stdout from printing during unittest
-        subprocess.call(upload_file_command.split(), stdout=subprocess.PIPE)
-
-    def tearDown(self):
-        # TODO: remove file as soon as it's implemented
-        self.env.delete_bucket(self.bucket['id'])
-        super(TestListFilesSuccess, self).tearDown()
-
-    def test_list_files_without_callback_success(self):
-        files = self.env.list_files(self.bucket['id'])
-        self.assertEqual(len(files), 1)
-        # TODO: uncomment when file naming works
-        # self.assertEqual(files[0]['filename'], self.file_name)
-
-    def test_list_files_with_callback_success(self):
-        results = []
-
-        def callback(error_, files_):
-            results.append(error_)
-            results.append(files_)
-
-        self.env.list_files(self.bucket['id'], callback)
-        error, files = results
-        self.assertEqual(error, None)
-        self.assertEqual(len(files), 1)
-        # TODO: uncomment when file naming works
-        # self.assertEqual(files[0]['filename'], self.file_name)
+# class TestListFilesSuccess(TestStorjEnv):
+#     def setUp(self):
+#         self.file_name = 'test.data'
+#         super(TestListFilesSuccess, self).setUp()
+#         file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
+#         self.bucket = self.env.create_bucket('python_libstorj-test4')
+#         upload_file_command = 'storj upload-file %s %s' % (self.bucket['id'], file_path)
+#         # NB: `stdout=subprocess.PIPE` prevents subprocess
+#         #     stdout from printing during unittest
+#         subprocess.call(upload_file_command.split(), stdout=subprocess.PIPE)
+#
+#     def tearDown(self):
+#         # TODO: remove file as soon as it's implemented
+#         self.env.delete_bucket(self.bucket['id'])
+#         super(TestListFilesSuccess, self).tearDown()
+#
+#     def test_list_files_without_callback_success(self):
+#         files = self.env.list_files(self.bucket['id'])
+#         self.assertEqual(len(files), 1)
+#         # TODO: uncomment when file naming works
+#         # self.assertEqual(files[0]['filename'], self.file_name)
+#
+#     def test_list_files_with_callback_success(self):
+#         results = []
+#
+#         def callback(error_, files_):
+#             results.append(error_)
+#             results.append(files_)
+#
+#         self.env.list_files(self.bucket['id'], callback)
+#         error, files = results
+#         self.assertEqual(error, None)
+#         self.assertEqual(len(files), 1)
+#         # TODO: uncomment when file naming works
+#         # self.assertEqual(files[0]['filename'], self.file_name)
 
 
 class TestListFilesFailure(TestStorjEnvBadHost):

@@ -63,14 +63,14 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
     Have a look at:
     [ [`environment`](https://docs.docker.com/compose/compose-file/compose-file-v2/#environment) | [`volumes`](https://docs.docker.com/compose/compose-file/compose-file-v2/#volume-configuration-reference) | [`command`](https://docs.docker.com/compose/compose-file/compose-file-v2/#command) | [`links`](https://docs.docker.com/compose/compose-file/compose-file-v2/#links) | [`ports`](https://docs.docker.com/compose/compose-file/compose-file-v2/#ports) ]
 
-    Note: `STORJ_BRIDGE` and `STORJ_KEYPASS` environment variables; see [`libstorj`]() for more info - _(these currently only apply to the `libstorj` cli)_.
+    Note: `STORJ_BRIDGE` and `STORJ_KEYPASS` environment variables; see [`libstorj`](https://github.com/storj/libstorj) for more info - _(these currently only apply to the `libstorj` cli)_.
 
 1. Run `python_libstorj`
     ```
     # See https://docs.docker.com/compose/reference/
 
     # Get a shell in a `python_libstorj` container
-    docker-compose run
+    docker-compose run python_libstorj
 
     #   Because the composition `links` the `bridge` service, docker-compose
     #   should ensure that `bridge` is running and port-forwarded for use
@@ -86,7 +86,7 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
     ```
     # See https://docs.docker.com/engine/reference/commandline/build/
 
-    docker build --tag python_libstorj .
+    docker build --tag python_libstorj ./dockerfiles/python_libstorj.dockerfile
     ```
 1. Running the container
     ```

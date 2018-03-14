@@ -1,4 +1,14 @@
 version: "2"
 services:
   bridge:
-    image: storjlabs/storj-integration:simple
+    environment:
+      STORJ_EMAIL: user@example.com
+      STORJ_PASS: password
+      STORJ_KEYPASS: ''
+      STORJ_MNEMONIC: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
+    build:
+      args:
+        STORJ_EMAIL: user@example.com
+        STORJ_PASS: password
+        STORJ_KEYPASS: ''
+        STORJ_MNEMONIC: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
