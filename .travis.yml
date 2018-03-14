@@ -1,9 +1,9 @@
 install:
   - cp tests/options.docker_compose_example.yml tests/options.yml
-  - docker-compose build
+  - docker build -t python_libstorj -f ./dockerfiles/python_libstorj.dockerfile .
 script:
   - "echo 'TODO: run user creation script'"
-  - docker-compose run python_libstorj bash -c "./build.sh && python -m unittest discover"
+  - docker run python_libstorj bash -c "./build.sh && python -m unittest discover"
 env:
   - STORJ_BRIDGE="http://bridge:6382"
   - STORJ_EMAIL="username@example.com"
