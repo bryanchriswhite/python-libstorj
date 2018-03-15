@@ -22,11 +22,13 @@ MongoClient.connect(url, function(err, client) {
       activated: true,
       activator: null
     }
-  }, function(err) {
+  }, function(err, result) {
       if (err) {
           return console.error(err);
       }
+
       console.log("...done!");
+      console.log("result:", result);
 
       client.close();
   });

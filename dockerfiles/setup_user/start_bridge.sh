@@ -13,4 +13,4 @@ pm2 start -n bridge $root_dir/bin/storj-bridge -- -c $root_dir/config/storj-brid
 
 #wait for things to come up
 echo "Sleeping for 5..."
-sleep 5
+sleep 3
