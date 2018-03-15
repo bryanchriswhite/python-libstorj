@@ -42,6 +42,6 @@ EXPOSE 27017
 # install python dependencies and build python_libstorj
 WORKDIR /python_libstorj
 RUN pip install -r ./requirements.txt
-RUN ./build.sh /root/libstorj
+RUN ./build.sh /root/libstorj/src
 
 CMD /bin/bash
