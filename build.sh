@@ -12,7 +12,7 @@ if [ -d "./env" ]; then
 fi
 
 # generate wrapper code from swig interface file
-swig -c++ -python -I"$libstorj_include_dir" -outdir lib/ext ./lib/ext/python_libstorj.i && \
+swig -c++ -python -I"$LIBSTORJ_INCLUDE" -outdir lib/ext ./lib/ext/python_libstorj.i && \
 
 # build extension module
 python ./setup.py build_ext
