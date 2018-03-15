@@ -4,13 +4,13 @@ FROM storjlabs/storj-integration:swig-python-libstorj
 RUN mkdir /python_libstorj
 
 # copy scripts and source
-COPY ./dockerfiles/install_libstorj.sh ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
+COPY ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
 COPY ./dockerfiles/setup_user /python_libstorj/setup_user
 COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
 
 # modify file permissions
-RUN chmod 655 /python_libstorj/setup_user/{*.{js,sh}}
+RUN chmod 655 /python_libstorj/setup_user/*.{js,sh}
 WORKDIR /python_libstorj/setup_user
 
 # setup env variables

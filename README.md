@@ -35,13 +35,13 @@ These different environments aren't necessarily mutually exclusive; you can choo
     _See [`libstorj`](https://github.com/storj/libstorj#libstorj) for an easy way to create/import/export users/mnemonics (`libstorj --help`)._
 
 
-### Using Docker Compose
-Using docker compose is a convenient way to get into a completely ready to go environment.
-The composition uses the [`storjlabs/storj-integration`](https://github.com/Storj/integration) image which runs a complete mini storj backend:
+### Using Docker
+Using docker is a convenient way to get into a completely ready to go environment.
+The image is based on [`storjlabs/storj-integration`](https://github.com/Storj/integration) image which runs a complete mini storj backend:
 
 _Bridge (1x), Bridge-monitor(1x), Renters (6x), Farmers (16x)_
 
-You can use the [`docker-compose.yml`](./docker-compose.yml) as a starting point for building a custom docker environment with `python_libstorj` installed *and* built from source.
+You can use the [`Dockerfile`](./Dockerfile) as a starting point for building a custom docker environment with `python_libstorj` installed *and* built from source.
 This is ideal for use as a development environment for `python_libstorj`, for example.
 
 1. [Clone python_libstorj](#clone-python_libstorj)
