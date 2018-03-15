@@ -1,6 +1,6 @@
 #!/bin/bash
 
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../.."
+root_dir="/root"
 
 #redis
 service redis-server start
