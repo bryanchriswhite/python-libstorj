@@ -30,8 +30,7 @@ RUN . /root/.nvm/nvm.sh \
     && ./start_bridge.sh \
     && ./create_user.sh \
     && ./activate_user.js \
-    && ./import_keys.sh \
-    && ../stop_everything.sh
+    && ./import_keys.sh
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
