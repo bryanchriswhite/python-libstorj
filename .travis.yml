@@ -1,6 +1,6 @@
 install:
   - cp tests/options.docker_example.yml tests/options.yml
-  - docker build -t python_libstorj --build-arg STORJ_BRIDGE=$STORJ_BRIDGE --build-arg STORJ_EMAIL=$STORJ_EMAIL --build-arg STORJ_PASS=$STORJ_PASS --build-arg STORJ_MNEMONIC=$STORJ_MNEMONIC -f ./dockerfiles/python_libstorj.dockerfile .
+  - docker build -t python_libstorj --build-arg STORJ_BRIDGE=$STORJ_BRIDGE --build-arg STORJ_EMAIL=$STORJ_EMAIL -f ./dockerfiles/python_libstorj.dockerfile .
 script:
   - "echo 'TODO: run user creation script'"
   - docker run python_libstorj bash -c ". /root/.nvm/nvm.sh && /root/scripts/start_everything.sh && ./build.sh && python -m unittest discover"
