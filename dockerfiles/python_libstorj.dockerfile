@@ -10,8 +10,7 @@ COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
 
 # modify file permissions
-RUN ls /python_libstorj/setup-user
-RUN chmod 655 /python_libstorj/setup-user/{*.{js,sh}}
+RUN chmod 655 /python_libstorj/setup_user/{*.{js,sh}}
 WORKDIR /python_libstorj/setup_user
 
 # setup env variables
