@@ -44,11 +44,4 @@ WORKDIR /python_libstorj
 RUN pip install -r ./requirements.txt
 RUN ./build.sh /python_libstorj/lib/ext /python_libstorj/lib/ext/python_libstorj.i
 
-# setup env variables
-# (uncomment/modify for use outside of docker-compose)
-#ARG STORJ_BRIDGE='https://api.storj.io'
-#ARG STORJ_KEYPASS=''
-#ENV STORJ_BRIDGE=$STORJ_BRIDGE
-#ENV STORJ_KEYPASS=$STORJ_KEYPASS
-
 CMD /bin/bash

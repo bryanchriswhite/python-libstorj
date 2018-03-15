@@ -1,5 +1,7 @@
 #!/bin/bash
 
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # if a virtualenv is available, use it
 if [ -d "./env" ]; then
     . ./env/bin/activate;
@@ -16,7 +18,7 @@ if [ $# -gt 1 ]; then
 fi
 
 # generate wrapper code from swig interface file
-swig -c++ -python -outdir $output_dir $interface_file && \
+cd $root_dir && swig -c++ -python -outdir $output_dir $interface_file && \
 
 # build extension module
 python ./setup.py build_ext
