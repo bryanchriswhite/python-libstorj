@@ -12,7 +12,7 @@ const dbName = 'storj-sandbox';
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, client) {
   assert.equal(null, err);
-  console.log("Connected successfully to server");
+  console.log("Successfully connected to mongo...");
 
   const db = client.db(dbName);
 
@@ -24,8 +24,9 @@ MongoClient.connect(url, function(err, client) {
     }
   }, function(err) {
       if (err) {
-          console.error(err);
+          return console.error(err);
       }
+      console.log("...done!");
 
       client.close();
   });
