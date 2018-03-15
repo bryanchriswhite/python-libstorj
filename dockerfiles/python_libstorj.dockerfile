@@ -8,6 +8,8 @@ COPY ./build.sh ./requirements.txt ./setup.py ./setup.cfg /python_libstorj/
 COPY ./dockerfiles/setup_user /python_libstorj/setup_user
 COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
+RUN mkdir -p /python_libstorj/ext
+RUN ln -s /libstorj /python_libstorj/ext/libstorj
 
 # modify file permissions
 RUN chmod 655 /python_libstorj/setup_user/*.{js,sh}
