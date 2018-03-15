@@ -10,7 +10,8 @@ COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
 
 # modify file permissions
-RUN chmod 655 /python_libstorj/setup-user/*.{js,sh}
+ls /python_libstorj/setup-user
+RUN chmod 655 /python_libstorj/setup-user/{*.{js,sh}}
 WORKDIR /python_libstorj/setup_user
 
 # setup env variables
@@ -24,7 +25,6 @@ ENV STORJ_PASS=$STORJ_PASS
 ENV STORJ_MNEMONIC=$STORJ_MNEMONIC
 ENV STORJ_BRIDGE='http://127.0.0.1:6382'
 
-RUN /python_libstorj/install_libstorj.sh
 RUN . /root/.nvm/nvm.sh \
     && npm install \
     && ./start_bridge.sh \
