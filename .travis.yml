@@ -3,6 +3,6 @@ install:
   - docker build -t python_libstorj --build-arg STORJ_EMAIL="$STORJ_EMAIL" --build-arg STORJ_PASS="$STORJ_PASS" --build-arg STORJ_MNEMONIC="$STORJ_MNEMONIC" -f ./dockerfiles/python_libstorj.dockerfile .
 script:
   - "echo 'TODO: run user creation script'"
-  - docker run python_libstorj bash -c ". /root/.nvm/nvm.sh && /root/scripts/start_everything.sh && echo "Sleeping 5..." && sleep 5 && ./build.sh && python -m unittest discover"
+  - docker run python_libstorj bash -c ". /root/.nvm/nvm.sh && /root/scripts/start_everything.sh && echo 'Sleeping 5...' && sleep 5 && ./build.sh && python -m unittest discover"
 env:
   - STORJ_EMAIL="username@example.com" STORJ_PASS="password" STORJ_MNEMONIC="abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
