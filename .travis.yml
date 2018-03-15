@@ -1,5 +1,5 @@
 install:
-  - cp tests/options.docker_compose_example.yml tests/options.yml
+  - cp tests/options.docker.yml tests/options.yml
   - > docker build -t python_libstorj \
       --build-arg STORJ_BRIDGE=$STORJ_BRIDGE \
       --build-arg STORJ_EMAIL=$STORJ_EMAIL \
