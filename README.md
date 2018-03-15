@@ -48,7 +48,7 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
 
 1. [Create a config file](#configuration)
 
-    The [`options.docker_compose_example.yml`](./tests/options.docker_compose_example.yml) only requires changes to the `user`, `pass` and `mnemonic` properties; further changes are optional.
+    The [`options.docker_example.yml`](./tests/options.docker_example.yml) only requires changes to the `user`, `pass` and `mnemonic` properties; further changes are optional.
     The [`libstorj`](https://github.com/storj/libstorj#libstorj) cli tool is already installed in the `python_libstorj` service's image; see the help for more info (`libstorj --help`).
 1. Build the python_libstorj service _(optional)_
 
