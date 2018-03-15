@@ -2,7 +2,7 @@ bridge_options:
     proto: http
     host: 127.0.0.1
     port: 6382
-    user: user@example.com
+    user: username@example.com
     pass: password
 encrypt_options:
     mnemonic: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
