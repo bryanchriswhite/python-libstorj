@@ -3,6 +3,7 @@
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 libstorj_include_dir="$root_dir/ext/libstorj/src"
 
+LIBSTORJ_INCLUDE=$(printenv LIBSTORJ_INCLUDE)
 if [ ! -z $LIBSTORJ_INCLUDE ]; then
     libstorj_include_dir=$LIBSTORJ_INCLUDE
 fi
