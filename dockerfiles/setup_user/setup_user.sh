@@ -1,4 +1,5 @@
 #!/bin/bash
+. ~/.nvm/nvm.sh
 
 root_dir="/root"
 
