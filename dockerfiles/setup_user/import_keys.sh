@@ -8,20 +8,13 @@ set timeout 3
 
 spawn storj import-keys
 
-expect 'Bridge username'
-send $email
-
-expect 'Bridge password:'
-send $pass
-
-expect 'Encryption key:'
-send $mnemonic
-
-expect 'Unlock passphrase:'
-send $keypass
-
-expect 'Again to verify:'
-send $keypass
+expect {
+    Bridge username {send_user "$email"}
+    Bridge password: {send_user "$pass"}
+    Encryption key: {send_user $mnemonic}
+    Unlock passphrase {send_user $keypass}
+    Again to verify {send_user "$keypass"}
+}
 
 spawn echo "sleeping 3..."
 spawn sleep 3
