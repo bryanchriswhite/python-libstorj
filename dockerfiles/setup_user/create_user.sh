@@ -17,6 +17,9 @@ send $pass
 expect 'Strength'
 send 128
 
+expect 'Encryption key'
+send $mnemonic
+
 # expect 'overwrite'
 # send 'y'
 

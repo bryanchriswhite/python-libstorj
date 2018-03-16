@@ -17,11 +17,11 @@ send $email
 expect 'password'
 send $pass
 
-expect 'key'
+expect 'Encryption key'
 send $mnemonic
 
-expect 'passphrase'
+expect 'Unlock passphrase'
 send $keypass
 
-expect 'verify'
+expect 'Again to verify'
 send $keypass
