@@ -38,10 +38,12 @@ RUN . /root/.nvm/nvm.sh \
     && ./start_bridge.sh \
     && ./create_user.sh \
     && echo "create user done!" \
-    && ./activate_user.js
+    && ./activate_user.js \
+    && sleep 3
 
 
-RUN ./import_keys.sh
+RUN ./import_keys.sh \
+    && sleep 3
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
