@@ -38,9 +38,13 @@ RUN . /root/.nvm/nvm.sh \
     && ./start_bridge.sh \
     && ./create_user.sh \
     && ./activate_user.js \
+    && touch /root/.storj/127.0.0.1.json \
     && sleep 3
 
-RUN ./import_keys.sh && sleep 3
+
+RUN ./import_keys.sh \
+    && sleep 3 \
+    && touch /root/.storj/127.0.0.1.json
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
