@@ -11,17 +11,17 @@ spawn storj import-keys
 # expect 'overwrite'
 # send 'y'
 
-expect 'Bridge username'
+expect 'Bridge username:'
 send $email
 
-expect 'Bridge password'
+expect 'Bridge password:'
 send $pass
 
-expect 'Encryption key'
+expect 'Encryption key:'
 send $mnemonic
 
-expect 'Unlock passphrase'
+expect 'Unlock passphrase:'
 send $keypass
 
-expect 'Again to verify'
+expect 'Again to verify:'
 send $keypass
