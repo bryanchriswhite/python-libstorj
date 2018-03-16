@@ -8,11 +8,25 @@ set timeout 3
 
 spawn storj register
 
-expect {
-    Bridge username {send $email}
-    Bridge password: {send $pass}
-    Strength: {send $strength}
-    Unlock passphrase {send $keypass}
-    Again to verify {send $keypass}
-}
+expect 'Bridge username'
+send $email
+
+expect 'Bridge password:'
+send $pass
+
+expect 'Strength:'
+send $strength
+
+# expect 'overwrite'
+# send 'y'
+
+expect 'Unlock passphrase:'
+send $keypass
+
+expect 'Again to verify:'
+send $keypass
+
+spawn echo "sleeping 3..."
+spawn sleep 3
+
 close
