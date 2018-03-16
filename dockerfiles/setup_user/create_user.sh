@@ -4,7 +4,7 @@ set email "$env(STORJ_EMAIL)\n"
 set pass "$env(STORJ_PASS)\n"
 set keypass "$env(STORJ_KEYPASS)\n"
 set mnemonic "$env(STORJ_MNEMONIC)\n"
-set timeout 3
+set timeout 1
 
 spawn storj register
 
@@ -20,8 +20,8 @@ send 128
 # expect 'overwrite'
 # send 'y'
 
-expect 'passphrase'
+expect 'Unlock passphrase'
 send $keypass
 
-expect 'verify'
+expect 'Again to verify'
 send $keypass
