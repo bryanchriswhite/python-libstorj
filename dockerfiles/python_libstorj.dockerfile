@@ -39,6 +39,7 @@ RUN . /root/.nvm/nvm.sh \
     && ./create_user.sh \
     && echo "create user done!" \
     && ./activate_user.js \
+    && ./stop_bridge.sh \
     && sleep 3
 
 
