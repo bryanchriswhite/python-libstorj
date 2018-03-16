@@ -27,4 +27,4 @@ send $keypass
 expect 'Again to verify:'
 send $keypass2
 
-close
+exit
