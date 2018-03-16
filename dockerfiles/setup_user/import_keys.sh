@@ -8,9 +8,6 @@ set timeout 3
 
 spawn storj import-keys
 
-expect 'overwrite'
-send 'y'
-
 expect 'Bridge username'
 send $email
 

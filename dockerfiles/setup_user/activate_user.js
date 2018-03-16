@@ -28,6 +28,7 @@ MongoClient.connect(url, function(err, client) {
       }
 
       console.log("...done!");
+      console.log(result);
       client.close();
   });
 });

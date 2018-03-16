@@ -3,7 +3,6 @@
 set email "$env(STORJ_EMAIL)\n"
 set pass "$env(STORJ_PASS)\n"
 set keypass "$env(STORJ_KEYPASS)\n"
-set mnemonic "$env(STORJ_MNEMONIC)\n"
 set strength "128\n"
 set timeout 3
 
