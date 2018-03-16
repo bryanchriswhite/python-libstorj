@@ -242,7 +242,7 @@ class TestListFilesSuccess(TestStorjEnv):
         upload_file_command = 'storj upload-file %s %s' % (self.bucket['id'], file_path)
         # NB: `stdout=subprocess.PIPE` prevents subprocess
         #     stdout from printing during unittest
-        subprocess.call(upload_file_command.split(), stdout=subprocess.PIPE)
+        subprocess.call(upload_file_command.split()) #, stdout=subprocess.PIPE)
 
     def tearDown(self):
         # TODO: remove file as soon as it's implemented

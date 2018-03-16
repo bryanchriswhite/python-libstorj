@@ -29,12 +29,16 @@ ENV STORJ_MNEMONIC=$STORJ_MNEMONIC
 ENV STORJ_BRIDGE=$STORJ_BRIDGE
 ENV LIBSTORJ_INCLUDE=$LIBSTORJ_INCLUDE
 
+# remove STORJ_BRIDGE export in .bashrc
+RUN sed -i '/export STORJ_BRIDGE.+/d' /root/.bashrc
+
 RUN . /root/.nvm/nvm.sh \
     && npm install \
     && ./start_bridge.sh \
     && ./create_user.sh \
     && ./activate_user.js \
-    && ./import_keys.sh
+    && ./import_keys.sh \
+    sleep 2
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
