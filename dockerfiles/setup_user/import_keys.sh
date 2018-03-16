@@ -11,7 +11,7 @@ spawn storj import-keys
 # expect 'overwrite'
 # send 'y'
 
-expect 'Bridge username:'
+expect 'Bridge username'
 send $email
 
 expect 'Bridge password:'
