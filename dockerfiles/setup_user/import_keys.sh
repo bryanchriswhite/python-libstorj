@@ -9,8 +9,8 @@ set timeout 3
 
 spawn storj import-keys
 
-# expect 'Would you like to overwrite'
-# send "y\n"
+expect 'Would you like to overwrite'
+send "y\n"
 
 expect 'Bridge username'
 send $email
@@ -26,5 +26,7 @@ send $keypass
 
 expect 'Again to verify:'
 send $keypass2
+
+expect 'EOF'
 
 exit
