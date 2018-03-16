@@ -88,7 +88,7 @@ class TestGetInfoFailure(TestStorjEnvBadHost):
         self.assertRaisesWithBadHost(self.env.get_info, callback)
 
 
-class TestCreateDeleteSuccess(TestStorjEnv):
+class TestCreateDeleteBucketSuccess(TestStorjEnv):
     def test_create_bucket_without_callback_success(self):
         bucket_name = 'python_libstorj-test2'
 
@@ -112,6 +112,9 @@ class TestCreateDeleteSuccess(TestStorjEnv):
         bucket_name = self.get_bucket_id('python_libstorj-test2')
 
         self.env.delete_bucket(bucket_name)
+        # NB: asserts no bucket with name: `bucket_name` exists
+        bucket_iterator = (b for b in self.env.list_buckets() if b['name'] == bucket_name)
+        self.assertRaises(StopIteration, next, bucket_iterator)
 
     def test_delete_bucket_with_callback_success(self):
         bucket_name = self.get_bucket_id('python_libstorj-test')
@@ -228,6 +231,68 @@ class TestListBucketsFailure(TestStorjEnvBadHost):
         try:
             buckets, error = [results[key] for key in ('buckets', 'error')]
             self.assertEqual(buckets, [])
+            self.assertBadHostError(error)
+        except KeyError:
+            self.fail('Callback not called!')
+
+
+# class TestDeleteFileSuccess(TestStorjEnv):
+#     def setUp(self):
+#         # create bucket
+#         # upload file
+#         self.fail('pending')
+#
+#     def tearDown(self):
+#         # delete ducket and/or file
+#         self.fail('pending')
+#
+#     def test_delete_file_without_callback_success(self):
+#         bucket_name = self.get_bucket_id('python_libstorj-test6')
+#         file_name = ''
+#
+#         self.env.delete_file(bucket_name)
+#         # NB: asserts no bucket with name: `bucket_name` exists
+#         bucket_iterator = (b for b in self.env.list_buckets() if b['name'] == bucket_name)
+#         self.assertRaises(StopIteration, next, bucket_iterator)
+#
+#     def test_delete_file_with_callback_success(self):
+#         bucket_name = self.get_bucket_id('python_libstorj-test7')
+#         file_name = ''
+#         results = []
+#
+#         def callback(error):
+#             results.append(error)
+#
+#         self.env.delete_file(bucket_name, callback)
+#         try:
+#             error = results[0]
+#             self.assertIsNone(error)
+#
+#             # NB: asserts no bucket with name: `bucket_name` exists
+#             bucket_iterator = (b for b in self.env.list_buckets() if b['name'] == bucket_name)
+#             self.assertRaises(StopIteration, next, bucket_iterator)
+#         except IndexError:
+#             self.fail('Callback not called!')
+
+
+class TestDeleteFileFailure(TestStorjEnvBadHost):
+    def test_delete_file_without_callback_failure(self):
+        bucket_name = 'python_libstorj-test_bucket2'
+        file_name = 'python_libstorj-test_file2'
+        self.assertRaisesWithBadHost(self.env.delete_file, bucket_name, file_name)
+
+    def test_delete_file_with_callback_failure(self):
+        bucket_name = 'python_libstorj-test_bucket'
+        file_name = 'python_libstorj-test_file'
+        results = []
+
+        def callback(error):
+            results.append(error)
+
+        self.assertRaisesWithBadHost(self.env.delete_file, bucket_name, file_name, callback)
+        try:
+            error = results[0]
+
             self.assertBadHostError(error)
         except KeyError:
             self.fail('Callback not called!')
