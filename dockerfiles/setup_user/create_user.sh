@@ -15,7 +15,7 @@ expect 'password'
 send $pass
 
 expect 'Strength'
-send '128'
+send 128
 
 # expect 'overwrite'
 # send 'y'
