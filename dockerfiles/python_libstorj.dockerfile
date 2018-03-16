@@ -37,7 +37,8 @@ RUN . /root/.nvm/nvm.sh && npm install
 RUN . /root/.nvm/nvm.sh \
     && ./start_bridge.sh \
     && ./create_user.sh \
-    && ./activate_user.js
+    && ./activate_user.js \
+    && sleep 3
 
 RUN ./import_keys.sh && sleep 3
 
