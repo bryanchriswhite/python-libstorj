@@ -1,4 +1,0 @@
-version: "2"
-services:
-  bridge:
-    image: storjlabs/storj-integration:simple

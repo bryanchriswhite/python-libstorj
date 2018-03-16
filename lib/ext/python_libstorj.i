@@ -23,7 +23,7 @@ int storj_mnemonic_generate(int strength, char **buffer);
 %rename(init_env) storj_init_env;
 %rename(destroy_env) storj_destroy_env;
 
-%include "ext/libstorj/src/storj.h"
+%include "storj.h"
 %include "python_libstorj.h"
 
 FILE *fopen(const char *pathname, const char *mode);
