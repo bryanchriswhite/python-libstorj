@@ -27,3 +27,10 @@ expect 'Again to verify:'
 send $keypass
 
 close
+
+spawn echo "sleeping for 3..."
+close
+
+spawn sleep 3
+close
+
