@@ -39,9 +39,7 @@ RUN ./create_user.sh
 RUN . /root/.nvm/nvm.sh && ./activate_user.js
 
 
-RUN ./import_keys.sh \
-    && sleep 3 \
-    && touch /root/.storj/127.0.0.1.json
+RUN ./import_keys.sh
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
