@@ -42,7 +42,7 @@ The image is based on [`storjlabs/storj-integration`](https://github.com/Storj/i
 
 _Bridge (1x), Bridge-monitor(1x), Renters (6x), Farmers (16x)_
 
-You can use the [`Dockerfile`](./Dockerfile) as a starting point for building a custom docker environment with `python_libstorj` installed *and* built from source.
+You can use the [`python_libstorj.dockerfile`](./dockerfiles/python_libstorj.dockerfile) as a starting point for building a custom docker environment with `python_libstorj` installed *and* built from source.
 This is ideal for use as a development environment for `python_libstorj`, for example.
 
 1. [Clone python_libstorj](#clone-python_libstorj)
@@ -56,7 +56,7 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
     ```
     # See https://docs.docker.com/compose/reference/
 
-    docker-compose build
+    docker build -t
     # docker-compose build --no-cache #ensures fresh build
     ```
 1. Edit `docker-compose.yml` _(optional)_
