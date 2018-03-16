@@ -90,14 +90,21 @@ See the help for more info (`libstorj --help`).
     #     https://docs.docker.com/engine/reference/commandline/create/
     #     https://docs.docker.com/engine/reference/commandline/start/
 
+    # See volumes: https://docs.docker.com/storage/volumes/
+    # use of volumes (i.e. `-v`) is optional
+
     # Get a quick shell in a `python_libstorj` container
-    docker run -it --name python_libstorj_1 python_libstorj
+    docker run -v $(pwd)/tests:/python_libstorj/tests \
+               -v $(pwd)/lib:/python_libstorj/lib \
+               -it --name python_libstorj_1 python_libstorj
 
     # Get an ephemeral container
     docker run --rm -it python_libstorj
 
     # Create (but don't start) a persistent container
-    docker create -it --name python_libstorj_1 python_libstorj
+    docker create -v $(pwd)/tests:/python_libstorj/tests \
+                  -v $(pwd)/lib:/python_libstorj/lib \
+                  -it --name python_libstorj_1 python_libstorj
 
     # Start a stopped container
     # (either from a previous `create` or `run`)
