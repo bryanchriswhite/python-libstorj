@@ -3,6 +3,7 @@
 set email "$env(STORJ_EMAIL)\n"
 set pass "$env(STORJ_PASS)\n"
 set keypass "$env(STORJ_KEYPASS)\n"
+set keypass2 "$env(STORJ_KEYPASS)\n"
 set mnemonic "$env(STORJ_MNEMONIC)\n"
 set timeout 3
 
@@ -24,7 +25,7 @@ expect 'Unlock passphrase:'
 send $keypass
 
 expect 'Again to verify:'
-send $keypass
+send $keypass2
 
 close
 
