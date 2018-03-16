@@ -32,11 +32,12 @@ ENV LIBSTORJ_INCLUDE=$LIBSTORJ_INCLUDE
 # remove STORJ_BRIDGE export in .bashrc
 RUN sed -i '/export STORJ_BRIDGE.*/d' /root/.bashrc
 
+RUN echo "STORJ_BRIDGE: $STORJ_BRIDGE"
 RUN . /root/.nvm/nvm.sh && npm install
 RUN . /root/.nvm/nvm.sh \
     && ./start_bridge.sh \
     && ./create_user.sh \
-    && ./activate_user.js \
+    && ./activate_user.js
 
 RUN ./import_keys.sh && sleep 3
 
