@@ -18,6 +18,7 @@ sleep 3
 
 ./create_user.sh
 ./import_keys.sh
+node ./activate_user.js
 
 service redis-server stop
 service mongod stop
