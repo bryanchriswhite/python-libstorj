@@ -26,4 +26,6 @@ send $keypass
 expect "Again to verify:"
 send $keypass
 
+expect "EOF"
+
 exit
