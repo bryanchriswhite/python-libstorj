@@ -1,0 +1,14 @@
+{
+  "name": "setup-user",
+  "version": "1.0.0",
+  "description": "",
+  "main": "activate_user.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.0.4"
+  }
+}

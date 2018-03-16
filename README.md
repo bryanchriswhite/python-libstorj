@@ -1,5 +1,6 @@
 `python_libstorj`
-===
+=================
+[![Storj.io](https://storj.io/img/storj-badge.svg)](https://storj.io)
 [![Build Status](https://travis-ci.org/Storj/python-libstorj.svg?branch=master)](https://travis-ci.org/Storj/python-libstorj)
 
 Dependencies
@@ -35,48 +36,86 @@ These different environments aren't necessarily mutually exclusive; you can choo
     _See [`libstorj`](https://github.com/storj/libstorj#libstorj) for an easy way to create/import/export users/mnemonics (`libstorj --help`)._
 
 
-### Using Docker Compose
-Using docker compose is a convenient way to get into a completely ready to go environment.
-The composition uses the [`storjlabs/storj-integration`](https://github.com/Storj/integration) image which runs a complete mini storj backend:
+### Using Docker
+Using docker is a convenient way to get into a completely ready to go environment.
+The image is based on [`storjlabs/storj-integration`](https://github.com/Storj/integration) image which runs a complete mini storj backend:
 
 _Bridge (1x), Bridge-monitor(1x), Renters (6x), Farmers (16x)_
 
-You can use the [`docker-compose.yml`](./docker-compose.yml) as a starting point for building a custom docker environment with `python_libstorj` installed *and* built from source.
+You can use the [`python_libstorj.dockerfile`](./dockerfiles/python_libstorj.dockerfile) as a starting point for building a custom docker environment with `python_libstorj` installed **and** built from source.
 This is ideal for use as a development environment for `python_libstorj`, for example.
+
+The [`libstorj`](https://github.com/storj/libstorj#libstorj) cli tool is already installed in the `python_libstorj` image; it's used to **automatically** register and activate a user, **during `docker build`**, with the credentials provided in the following build-args and/or environment variables:
+
+  ```
+  # See https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables---build-arg
+
+
+  STORJ_EMAIL    # email address of storj user
+  STORJ_PASS     # basicauth password of storj user
+  STORJ_KEYPASS  # cli credential encryption passphrase
+  STORJ_MNEMONIC # mnemonic of a storj user
+  STORJ_BRIDGE   # the bridge server to talk to (e.g.  https://api.storj.io)
+                 #   - defaults to http://127.0.0.1:6382
+  ```
+
+See the help for more info (`libstorj --help`).
 
 1. [Clone python_libstorj](#clone-python_libstorj)
 
 1. [Create a config file](#configuration)
 
-    The [`options.docker_compose_example.yml`](./tests/options.docker_compose_example.yml) only requires changes to the `user`, `pass` and `mnemonic` properties; further changes are optional.
-    The [`libstorj`](https://github.com/storj/libstorj#libstorj) cli tool is already installed in the `python_libstorj` service's image; see the help for more info (`libstorj --help`).
-1. Build the python_libstorj service _(optional)_
+    The [`options.docker_example.yml`](./tests/options.docker_example.yml) only requires changes to the `user`, `pass` and `mnemonic` properties; further changes are optional.
+
+1. Build the python_libstorj image
 
     ```
-    # See https://docs.docker.com/compose/reference/
+    # See https://docs.docker.com/engine/reference/commandline/build/
 
-    docker-compose build
-    # docker-compose build --no-cache #ensures fresh build
+    docker build --tag python_libstorj \
+        --build-arg STORJ_EMAIL="<email>" \
+        --build-arg STORJ_PASS="<password>" \
+        --build-arg STORJ_MNEMONIC="<mnemonic>" \
+        -f ./dockerfiles/python_libstorj.dockerfile .
+
+    # optionally add the `--no-cache` arg to ensure a fresh build
     ```
-1. Edit `docker-compose.yml` _(optional)_
 
-    Have a look at:
-    [ [`environment`](https://docs.docker.com/compose/compose-file/compose-file-v2/#environment) | [`volumes`](https://docs.docker.com/compose/compose-file/compose-file-v2/#volume-configuration-reference) | [`command`](https://docs.docker.com/compose/compose-file/compose-file-v2/#command) | [`links`](https://docs.docker.com/compose/compose-file/compose-file-v2/#links) | [`ports`](https://docs.docker.com/compose/compose-file/compose-file-v2/#ports) ]
+    Note: `STORJ_BRIDGE` and `STORJ_KEYPASS` environment variables (and corresponding build-args; see [`libstorj`](https://github.com/storj/libstorj) for more info - _(these currently only apply to the `libstorj` cli (i.e. `options.yml` is used by the unittest suite))_.
 
-    Note: `STORJ_BRIDGE` and `STORJ_KEYPASS` environment variables; see [`libstorj`]() for more info - _(these currently only apply to the `libstorj` cli)_.
+1. Run/Create/Start a `python_libstorj` container
 
-1. Run `python_libstorj`
     ```
-    # See https://docs.docker.com/compose/reference/
+    # See https://docs.docker.com/engine/reference/commandline/run/
+    #     https://docs.docker.com/engine/reference/commandline/create/
+    #     https://docs.docker.com/engine/reference/commandline/start/
 
-    # Get a shell in a `python_libstorj` container
-    docker-compose run
+    # Get a quick shell in a `python_libstorj` container
+    docker run -it --name python_libstorj_1 python_libstorj
 
-    #   Because the composition `links` the `bridge` service, docker-compose
-    #   should ensure that `bridge` is running and port-forwarded for use
-    #   within the `python_libstorj` service.
-    #
-    #   You can use `docker-compose ps` to see what services are running.
+    # Get an ephemeral container
+    docker run --rm -it python_libstorj
+
+    # Create (but don't start) a persistent container
+    docker create -it --name python_libstorj_1 python_libstorj
+
+    # Start a stopped container
+    # (either from a previous `create` or `run`)
+    docker start -ai python_libstorj_1
+
+    # Deleting a container
+    # If you used the `--name` arg you will need to delete
+    # the container with that name before you can re-create it
+    docker rm python_libstorj_1 # following the example above
+
+    #   You can use `docker ps` to see what containers are running.
+    ```
+
+1. Start a local storj backend _(optional)_
+
+    ```
+    # See https://github.com/storj/libstorj
+    /root/scripts/start_everything.sh
     ```
 
 ### Using [Docker](https://www.docker.com/what-docker)
@@ -86,7 +125,7 @@ This is ideal for use as a development environment for `python_libstorj`, for ex
     ```
     # See https://docs.docker.com/engine/reference/commandline/build/
 
-    docker build --tag python_libstorj .
+    docker build --tag python_libstorj -f ./dockerfiles/python_libstorj.dockerfile .
     ```
 1. Running the container
     ```
