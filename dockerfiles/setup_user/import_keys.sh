@@ -27,4 +27,8 @@ send $keypass
 expect 'Again to verify:'
 send $keypass2
 
+close
+
+spawn sleep 3
+
 exit
