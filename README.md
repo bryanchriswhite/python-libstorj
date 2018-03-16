@@ -118,13 +118,6 @@ See the help for more info (`libstorj --help`).
     #   You can use `docker ps` to see what containers are running.
     ```
 
-1. Start a local storj backend _(optional)_
-
-    ```
-    # See https://github.com/storj/libstorj
-    /root/scripts/start_everything.sh
-    ```
-
 ### Using [Docker](https://www.docker.com/what-docker)
 1. [Clone python_libstorj](#clone-python_libstorj)
 1. [Create a config file](#configuration)
@@ -144,6 +137,15 @@ See the help for more info (`libstorj --help`).
         -v $(pwd)/tests:/python_libstorj/tests \
         python_libstorj
     ```
+
+1. Start a local storj backend _(optional)_
+
+    From within the `python_libstorj` container:
+    ```
+    # See https://github.com/storj/libstorj
+    /root/scripts/start_everything.sh
+    ```
+
 
 ### Using [Virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
 1. [Clone python_libstorj](#clone-python_libstorj)
