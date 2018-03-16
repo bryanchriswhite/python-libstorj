@@ -36,9 +36,12 @@ RUN echo "STORJ_BRIDGE: $STORJ_BRIDGE"
 RUN . /root/.nvm/nvm.sh && npm install
 RUN . /root/.nvm/nvm.sh \
     && ./start_bridge.sh \
+    && sleep 3 \
     && ./create_user.sh \
+    && sleep 3 \
     && echo "create user done!" \
     && ./activate_user.js \
+    && sleep 3 \
     && ./stop_bridge.sh \
     && sleep 3
 
