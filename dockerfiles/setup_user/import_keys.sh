@@ -4,7 +4,7 @@ set email "$env(STORJ_EMAIL)\n"
 set pass "$env(STORJ_PASS)\n"
 set keypass "$env(STORJ_KEYPASS)\n"
 set mnemonic "$env(STORJ_MNEMONIC)\n"
-set timeout 1
+set timeout 3
 
 spawn storj import-keys
 

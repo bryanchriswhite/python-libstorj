@@ -38,7 +38,7 @@ RUN . /root/.nvm/nvm.sh \
     && ./create_user.sh \
     && ./activate_user.js \
 
-RUN ./import_keys.sh && sleep 2
+RUN ./import_keys.sh && sleep 3
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
