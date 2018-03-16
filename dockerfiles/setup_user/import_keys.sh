@@ -3,30 +3,27 @@
 set email "$env(STORJ_EMAIL)\n"
 set pass "$env(STORJ_PASS)\n"
 set keypass "$env(STORJ_KEYPASS)\n"
-set keypass2 "$env(STORJ_KEYPASS)\n"
 set mnemonic "$env(STORJ_MNEMONIC)\n"
 set timeout 3
 
 spawn storj import-keys
 
-expect 'Would you like to overwrite'
+expect "Would you like to overwrite"
 send "y\n"
 
-expect 'Bridge username'
+expect "Bridge username"
 send $email
 
-expect 'Bridge password:'
+expect "Bridge password:"
 send $pass
 
-expect 'Encryption key:'
+expect "Encryption key:"
 send $mnemonic
 
-expect 'Unlock passphrase:'
+expect "Unlock passphrase:"
 send $keypass
 
-expect 'Again to verify:'
-send $keypass2
-
-expect 'EOF'
+expect "Again to verify:"
+send $keypass
 
 exit
