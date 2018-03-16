@@ -34,12 +34,16 @@ RUN sed -i '/export STORJ_BRIDGE.*/d' /root/.bashrc
 
 RUN echo "STORJ_BRIDGE: $STORJ_BRIDGE"
 RUN . /root/.nvm/nvm.sh && npm install
-RUN . /root/.nvm/nvm.sh && ./start_bridge.sh
-RUN ./create_user.sh
-RUN . /root/.nvm/nvm.sh && ./activate_user.js
+RUN . /root/.nvm/nvm.sh \
+    && ./start_bridge.sh \
+    && ./create_user.sh \
+    && echo "create user done!"
+    && ./activate_user.js \
+    && sleep 3
 
 
-RUN ./import_keys.sh
+RUN ./import_keys.sh \
+    && sleep 3
 
 # useful if you want to interact with mongo from
 # a "linked" container (e.g. python_libstorj)
