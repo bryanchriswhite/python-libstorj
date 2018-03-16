@@ -34,12 +34,9 @@ RUN sed -i '/export STORJ_BRIDGE.*/d' /root/.bashrc
 
 RUN echo "STORJ_BRIDGE: $STORJ_BRIDGE"
 RUN . /root/.nvm/nvm.sh && npm install
-RUN . /root/.nvm/nvm.sh \
-    && ./start_bridge.sh \
-    && ./create_user.sh \
-    && ./activate_user.js \
-    && touch /root/.storj/127.0.0.1.json \
-    && sleep 3
+RUN . /root/.nvm/nvm.sh && ./start_bridge.sh
+RUN ./create_user.sh
+RUN . /root/.nvm/nvm.sh && ./activate_user.js
 
 
 RUN ./import_keys.sh \
