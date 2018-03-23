@@ -75,16 +75,6 @@ void get_bucket_id_cb(uv_work_t *work_req, int status) {
         PyDict_SetItemString(bucket_dict, "name", PyString_FromString(req->bucket_name));
         PyDict_SetItemString(bucket_dict, "id", PyString_FromString(req->bucket_id));
         // TODO: manage encrypted bucket name
-
-        //bucket_list = PyList_New(req->total_buckets);
-        //for (uint8_t i=0; i<req->total_buckets; i++) {
-        //    PyObject *bucket_dict = PyDict_New();
-        //    PyDict_SetItemString(bucket_dict,"name", PyString_FromString(req->buckets[i].name));
-        //    PyDict_SetItemString(bucket_dict,"id", PyString_FromString(req->buckets[i].id));
-        //    PyDict_SetItemString(bucket_dict,"decrypted", PyBool_FromLong((long)req->buckets[i].decrypted));
-        //    PyDict_SetItemString(bucket_dict,"created", PyString_FromString(req->buckets[i].created));
-        //    PyList_SetItem(bucket_list, i, bucket_dict);
-        //}
     } else {
         error = PyString_FromString(error_str);
     }
