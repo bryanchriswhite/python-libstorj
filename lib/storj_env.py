@@ -5,6 +5,7 @@ from ext.upload_options import UploadOptions
 
 
 class StorjEnv():
+
     def __init__(self,
                  bridge_options,
                  encrypt_options,
@@ -79,28 +80,6 @@ class StorjEnv():
         pystorj.run(self.env.loop)
         return self._error_check(results)
 
-    def list_buckets(self, callback=None):
-        results = {}
-
-        def handle(error, buckets):
-            if buckets is not None:
-                for i, bucket in enumerate(buckets):
-                    iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
-                    created_date = datetime.strptime(bucket['created'], iso8601_format)
-                    buckets[i]['created'] = created_date
-                results['data'] = buckets
-
-            if error is not None:
-                error = Exception(error)
-                results['error'] = error
-
-            if callback is not None:
-                callback(error, buckets)
-
-        pystorj.list_buckets(self.env, handle)
-        pystorj.run(self.env.loop)
-        return self._error_check(results)
-
     def create_bucket(self, name, callback=None):
         results = []
 
@@ -131,6 +110,61 @@ class StorjEnv():
                 callback(error)
 
         pystorj.delete_bucket(self.env, bucket_id, handle)
+        pystorj.run(self.env.loop)
+        return self._error_check(results)
+
+    def get_bucket_id(self, bucket_name, callback=None):
+        results = {}
+
+        def handle(error, bucket):
+            if bucket is not None:
+                results['data'] = bucket
+
+            if error is not None:
+                error = Exception(error)
+                results['error'] = error
+
+            if callback is not None:
+                callback(error, bucket)
+
+        pystorj.get_bucket_id(self.env, bucket_name, handle)
+        pystorj.run(self.env.loop)
+        return self._error_check(results)
+
+    def list_buckets(self, callback=None):
+        results = {}
+
+        def handle(error, buckets):
+            if buckets is not None:
+                for i, bucket in enumerate(buckets):
+                    iso8601_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+                    created_date = datetime.strptime(bucket['created'], iso8601_format)
+                    buckets[i]['created'] = created_date
+                results['data'] = buckets
+
+            if error is not None:
+                error = Exception(error)
+                results['error'] = error
+
+            if callback is not None:
+                callback(error, buckets)
+
+        pystorj.list_buckets(self.env, handle)
+        pystorj.run(self.env.loop)
+        return self._error_check(results)
+
+    def delete_file(self, bucket_id, file_id, callback=None):
+        results = []
+
+        def handle(error):
+            if error is not None:
+                error = Exception(error)
+                results.append(error)
+
+            if callback is not None:
+                callback(error)
+
+        pystorj.delete_file(self.env, bucket_id, file_id, handle)
         pystorj.run(self.env.loop)
         return self._error_check(results)
 

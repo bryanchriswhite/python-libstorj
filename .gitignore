@@ -1,6 +1,7 @@
 .idea/*
 build/*
 env/*
+*.swp
 *.so
 *.pyc
 *.cxx
