@@ -4,14 +4,23 @@
 #include "Python.h"
 #include "typeinfo"
 
+bool status_check(int status_code, char **error) {
+    if (status_code > 0) {
+        char *storj_error = storj_strerror(status_code);
+        // TODO: should this be 254 or is 255 okay?
+        snprintf(*error, 254, "%s: status code %i", storj_error, status_code);
+        return false;
+    }
+
+    return true;
+}
+
 template <typename ReqType>
 bool error_and_status_check(ReqType *req, char **error) {
     if (req->error_code) {
         *error = (char *)curl_easy_strerror((CURLcode)req->error_code);
     } else if (req->status_code > 399) {
-        char *storj_error = storj_strerror(req->status_code);
-        // TODO: should this be 254 or is 255 okay?
-        snprintf(*error, 254, "%s: status code %i", storj_error, req->status_code);
+        return status_check(req->status_code, error);
     } else {
         *error = NULL;
         return true;
@@ -126,30 +135,38 @@ void store_file_progress_callback_cb(double progress,
                                      uint64_t bytes,
                                      uint64_t total_bytes,
                                      void *handle) {
-    printf("HELLO FROM #store_file_progress_callback!\n");
     PyObject *py_handle = (PyObject *)handle;
     PyObject *py_progress_callback = Py_None;
     PyObject *py_finished_callback = Py_None;
     int parse_status = PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
-    printf("parse_status: %i\n", parse_status);
 
-    printf("calling function...\n");
     PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
-    printf("done\n");
 }
 
 void store_file_finished_callback_cb(int error_status,
                                      storj_file_meta_t *file,
                                      void *handle) {
-    printf("HELLO FROM #store_file_finished_callback!\n");
+    char *error_str = (char *)calloc(255, sizeof(char));
     PyObject *py_handle = (PyObject *)handle;
     PyObject *py_progress_callback = Py_None;
     PyObject *py_finished_callback = Py_None;
+    PyObject *file_dict = Py_None;
+    PyObject *error = Py_None;
     PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
 
-    printf("calling function...\n");
-    PyObject_CallFunction(py_finished_callback, "is", error_status, file->id);
-    printf("done\n");
+    if (status_check(error_status, &error_str)) {
+        file_dict = PyDict_New();
+        PyDict_SetItemString(file_dict,"filename", PyString_FromString(file->filename));
+        PyDict_SetItemString(file_dict,"id", PyString_FromString(file->id));
+        PyDict_SetItemString(file_dict,"decrypted", PyBool_FromLong((long)file->decrypted));
+        PyDict_SetItemString(file_dict,"created", PyString_FromString(file->created));
+        PyDict_SetItemString(file_dict,"size", Py_BuildValue("k", file->size));
+        PyDict_SetItemString(file_dict,"mimetype", PyString_FromString(file->mimetype));
+    } else {
+        error = PyString_FromString(error_str);
+    }
+
+    PyObject_CallFunction(py_finished_callback, "OO", error, file_dict);
     Py_DECREF(py_progress_callback);
     Py_DECREF(py_finished_callback);
 }
@@ -188,7 +205,6 @@ storj_upload_state_t* store_file(storj_env_t *env,
                 PyObject *py_finished_callback) {
     Py_INCREF(py_progress_callback);
     Py_INCREF(py_finished_callback);
-    printf("HELLO FROM #store_file!\n");
     PyObject *py_handle = Py_BuildValue("(OO)", py_progress_callback, py_finished_callback);
     void *handle = (void *)py_handle;
     storj_upload_state_t *upload_state;

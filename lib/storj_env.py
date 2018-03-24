@@ -1,7 +1,8 @@
-import json
+import json, re
 from datetime import datetime
 from ext import python_libstorj as pystorj
 from ext.upload_options import UploadOptions
+import ipdb
 
 
 class StorjEnv():
@@ -39,7 +40,6 @@ class StorjEnv():
             if type(results) is list:
                 data = results[0]
             elif type(results) is dict:
-
                 try:
                     error = results['error']
                     if error is not None:
@@ -52,7 +52,7 @@ class StorjEnv():
             if type(data) is Exception:
                 raise data
             return data
-        except IndexError:
+        except(IndexError, KeyError):
             return None
 
     def destroy(self):
@@ -162,24 +162,27 @@ class StorjEnv():
                    options=None,
                    progress_callback=None,
                    finished_callback=None):
-        results = []
+        results = {}
 
-        def progress_callback_(progress, bytes, total_bytes):
+        def handle_progress(progress, bytes, total_bytes):
             if progress_callback is not None:
                 progress_callback(progress, bytes, total_bytes)
 
-        def finished_callback_(status, file_id):
+        def handle_finished(error, file_):
             # TODO: error handling based on `status`
-            results.append(file_id)
+            results['data'] = file_
+
+            if error is not None:
+                error = Exception(error)
+                results['error'] = error
 
             if finished_callback is not None:
-                finished_callback(status, file_id)
-
-            # if error is not None:
-            #     raise Exception(error)
+                finished_callback(error, file_)
 
         upload_options = UploadOptions(bucket_id, file_path, options)
         pystorj.store_file(self.env,
                            upload_options,
-                           progress_callback_,
-                           finished_callback_)
+                           handle_progress,
+                           handle_finished)
+        pystorj.run(self.env.loop)
+        return self._error_check(results)

@@ -22,6 +22,7 @@ int storj_mnemonic_generate(int strength, char **buffer);
 %rename(UploadState) storj_upload_state_t;
 %rename(init_env) storj_init_env;
 %rename(destroy_env) storj_destroy_env;
+%rename(strerror) storj_strerror;
 
 %include "storj.h"
 %include "python_libstorj.h"

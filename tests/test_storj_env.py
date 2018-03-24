@@ -1,12 +1,15 @@
-import sys, subprocess, yaml, re, unittest
+import sys, subprocess, yaml, re, unittest, time
 from os import path
 from datetime import datetime
 from lib.storj_env import StorjEnv
+from lib.ext import python_libstorj as pystorj
 sys.path.append('..')
+import ipdb
 
 
 class UtilityTestCase(unittest.TestCase):
     BAD_HOST_ERROR = Exception("Couldn't resolve host name")
+    STATUS_CODE_7000 = Exception("Unable to decode hex string: status code 7000")
 
     def assertExceptionEqual(self, error1, error2):
         self.assertEqual(type(error1), type(error2))
@@ -14,6 +17,9 @@ class UtilityTestCase(unittest.TestCase):
 
     def assertBadHostError(self, error):
         self.assertExceptionEqual(error, self.BAD_HOST_ERROR)
+
+    def assertStatus7000Error(self, error):
+        self.assertExceptionEqual(error, self.STATUS_CODE_7000)
 
     def assertRaisesWithMessage(self, msg, func, *args, **kwargs):
         try:
@@ -27,6 +33,9 @@ class UtilityTestCase(unittest.TestCase):
         message = self.BAD_HOST_ERROR.message
         self.assertRaisesWithMessage(message, func, *args, **kwargs)
 
+    def assertRaisesWithStatus7000(self, func, *args, **kwargs):
+        message = self.STATUS_CODE_7000.message
+        self.assertRaisesWithMessage(message, func, *args, **kwargs)
 
 class TestStorjEnv(UtilityTestCase):
     def setUp(self):
@@ -294,32 +303,86 @@ class TestListFilesFailure(TestStorjEnvBadHost):
             self.fail('Callback not called!')
 
 
-# class TestStoreFile(TestStorjEnv):
-#     def setUp(self):
-#         super(TestStoreFile, self).setUp()
-#         # buckets = self.env.list_buckets()
-#         # self.bucket = buckets[0]
-#         self.bucket = self.env.create_bucket('python_libstorj-test5')
-#
-#     def tearDown(self):
-#        self.bucket = self.env.delete_bucket(self.bucket['id'])
-#        super(TestStoreFile, self).tearDown()
-#
-#     def test_store_file_without_callback(self):
-#         # self.assertEqual(True, False)
-#         # return self.skipTest('wip')
-#         file_name = 'test.data'
-#         file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
-#         upload_options = {
-#             'file_name': file_name
-#         }
-#
-#         # file_ = self.env.store_file('6bb4051cac924f0264aca224',
-#         upload_state = self.env.store_file(self.bucket['id'],
-#                                     file_path,
-#                                     options=upload_options)
-#         # file_id_regex = re.compile('\w+', re.I)
-#         print(upload_state)
-#         self.assertNotEqual(upload_state, None)
-#         # self.assertNotEqual(file_, None)
-#         # self.assertRegexpMatches(file_['id'], file_id_regex)
+class TestStoreFileSuccess(TestStorjEnv):
+    def setUp(self):
+        super(TestStoreFileSuccess, self).setUp()
+        self.file_id_regex = re.compile('\w+', re.I)
+        self.file_name = 'test.data'
+        self.file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
+        self.upload_options = {
+            'file_name': self.file_name
+        }
+        self.bucket = self.env.create_bucket('python_libstorj-test5')
+
+    def tearDown(self):
+       self.env.delete_bucket(self.bucket['id'])
+       super(TestStoreFileSuccess, self).tearDown()
+
+    def test_store_file_without_callback_success(self):
+        file_ = self.env.store_file(self.bucket['id'],
+                                    self.file_path,
+                                    options=self.upload_options)
+        self.assertNotEqual(file_, None)
+        self.assertRegexpMatches(file_['filename'], self.file_name)
+        self.assertRegexpMatches(file_['id'], self.file_id_regex)
+
+    def test_store_file_with_callback_success(self):
+        results = {}
+
+        # TODO: ensure progress_callback is called as well
+        def callback(error, file_):
+            results['error'] = error
+            results['file'] = file_
+
+        self.env.store_file(self.bucket['id'],
+                            self.file_path,
+                            options=self.upload_options,
+                            finished_callback=callback)
+
+        try:
+            error, file_ = [results[k] for k in ('error', 'file')]
+            self.assertEqual(error, None)
+            self.assertNotEqual(file_, None)
+            self.assertEqual(file_['filename'], self.file_name)
+            self.assertRegexpMatches(file_['id'], self.file_id_regex)
+        except(KeyError):
+            self.fail('Callback not called!')
+
+
+class TestStoreFileFailure(TestStorjEnvBadHost):
+    def setUp(self):
+        super(TestStoreFileFailure, self).setUp()
+        self.file_name = 'test.data'
+        self.file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
+        self.upload_options = {
+            'file_name': self.file_name
+        }
+        self.bucket = {'id': 'python_libstorj-test-4_id'}
+
+    def test_store_file_without_callback_failure(self):
+        self.assertRaisesWithStatus7000(self.env.store_file,
+                                     self.bucket['id'],
+                                     self.file_path,
+                                     options=self.upload_options)
+
+    def test_store_file_with_callback_failure(self):
+        results = {
+            'error': None,
+            'file': None
+        }
+
+        def callback(error, file_):
+            results['error'] = error
+            results['file'] = file_
+
+        self.assertRaisesWithStatus7000(self.env.store_file,
+                                     self.bucket['id'],
+                                     self.file_path,
+                                     options=self.upload_options,
+                                     finished_callback=callback)
+        try:
+            error, file_ = [results[k] for k in ('error', 'file')]
+            self.assertStatus7000Error(error)
+            self.assertEqual(file_, None)
+        except KeyError:
+            self.fail('Callback not called!')
