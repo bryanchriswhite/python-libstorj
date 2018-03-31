@@ -1,4 +1,3 @@
-#include "python_libstorj.h"
 #include "storj.h"
 #include "uv.h"
 #include "Python.h"

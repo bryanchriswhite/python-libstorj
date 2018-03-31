@@ -1,7 +1,7 @@
 import json, re
 from datetime import datetime
-from ext import python_libstorj as pystorj
-from ext.upload_options import UploadOptions
+from .ext import python_libstorj as ext
+from .ext.upload_options import UploadOptions
 import ipdb
 
 
@@ -14,10 +14,10 @@ class StorjEnv():
                  log_options):
 
         options_list = (
-            (bridge_options, pystorj.BridgeOptions()),
-            (encrypt_options, pystorj.EncryptOptions()),
-            (http_options, pystorj.HttpOptions()),
-            (log_options, pystorj.LogOptions())
+            (bridge_options, ext.BridgeOptions()),
+            (encrypt_options, ext.EncryptOptions()),
+            (http_options, ext.HttpOptions()),
+            (log_options, ext.LogOptions())
         )
 
         for option_pair in options_list:
@@ -30,8 +30,8 @@ class StorjEnv():
                 setattr(option_struct, key, value)
 
         options = zip(*options_list)[1]
-        self.env = pystorj.init_env(*options)
-        self.env.loop = pystorj.set_loop(self.env)
+        self.env = ext.init_env(*options)
+        self.env.loop = ext.set_loop(self.env)
 
     @staticmethod
     def _error_check(results):
@@ -57,7 +57,7 @@ class StorjEnv():
             return None
 
     def destroy(self):
-        pystorj.destroy_env(self.env)
+        ext.destroy_env(self.env)
 
     def get_info(self, callback=None):
         results = []
@@ -76,8 +76,8 @@ class StorjEnv():
                 if callback is not None:
                     callback(error, info)
 
-        pystorj.get_info(self.env, handle)
-        pystorj.run(self.env.loop)
+        ext.get_info(self.env, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def create_bucket(self, name, callback=None):
@@ -94,8 +94,8 @@ class StorjEnv():
             if callback is not None:
                 callback(error, bucket)
 
-        pystorj.create_bucket(self.env, name, handle)
-        pystorj.run(self.env.loop)
+        ext.create_bucket(self.env, name, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def delete_bucket(self, bucket_id, callback=None):
@@ -109,8 +109,8 @@ class StorjEnv():
             if callback is not None:
                 callback(error)
 
-        pystorj.delete_bucket(self.env, bucket_id, handle)
-        pystorj.run(self.env.loop)
+        ext.delete_bucket(self.env, bucket_id, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def get_bucket_id(self, bucket_name, callback=None):
@@ -127,8 +127,8 @@ class StorjEnv():
             if callback is not None:
                 callback(error, bucket)
 
-        pystorj.get_bucket_id(self.env, bucket_name, handle)
-        pystorj.run(self.env.loop)
+        ext.get_bucket_id(self.env, bucket_name, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def list_buckets(self, callback=None):
@@ -149,8 +149,8 @@ class StorjEnv():
             if callback is not None:
                 callback(error, buckets)
 
-        pystorj.list_buckets(self.env, handle)
-        pystorj.run(self.env.loop)
+        ext.list_buckets(self.env, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def delete_file(self, bucket_id, file_id, callback=None):
@@ -164,8 +164,8 @@ class StorjEnv():
             if callback is not None:
                 callback(error)
 
-        pystorj.delete_file(self.env, bucket_id, file_id, handle)
-        pystorj.run(self.env.loop)
+        ext.delete_file(self.env, bucket_id, file_id, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def list_files(self, bucket_id, callback=None):
@@ -186,8 +186,8 @@ class StorjEnv():
             if callback is not None:
                 callback(error, files)
 
-        pystorj.list_files(self.env, bucket_id, handle)
-        pystorj.run(self.env.loop)
+        ext.list_files(self.env, bucket_id, handle)
+        ext.run(self.env.loop)
         return self._error_check(results)
 
     def store_file(self,
@@ -214,9 +214,9 @@ class StorjEnv():
                 finished_callback(error, file_)
 
         upload_options = UploadOptions(bucket_id, file_path, options)
-        pystorj.store_file(self.env,
-                           upload_options,
-                           handle_progress,
-                           handle_finished)
-        pystorj.run(self.env.loop)
+        ext.store_file(self.env,
+                       upload_options,
+                       handle_progress,
+                       handle_finished)
+        ext.run(self.env.loop)
         return self._error_check(results)
