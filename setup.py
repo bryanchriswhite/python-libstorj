@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 python_libstorj_module = Extension('_python_libstorj',
                                    sources=[
@@ -19,4 +19,5 @@ setup(name='python_libstorj',
       ext_modules=[python_libstorj_module],
       packages=['python_libstorj', 'python_libstorj.ext'],
       package_dir={'python_libstorj': 'lib'},
+      install_requires=['pyyaml'],
       )
