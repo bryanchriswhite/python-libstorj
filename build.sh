@@ -15,4 +15,4 @@ fi
 swig -c++ -python -I"$LIBSTORJ_INCLUDE" -outdir lib/ext ./lib/ext/python_libstorj.i && \
 
 # build extension module
-python ./setup.py build_ext
+python ./setup.py build_ext --build-lib lib/ext

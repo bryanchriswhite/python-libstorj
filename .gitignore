@@ -1,5 +1,6 @@
 .idea/*
 build/*
+dist/
 env/*
 *.swp
 *.so
@@ -9,3 +10,4 @@ lib/ext/python_libstorj.py
 tests/options.yml
 tests/download.data
 docker-compose.override.yml
+MANIFEST

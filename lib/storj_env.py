@@ -1,35 +1,42 @@
-import json, re
+import json, os
 from datetime import datetime
 from .ext import python_libstorj as ext
 from .ext.upload_options import UploadOptions
-import ipdb
+from .ext import load_yaml_options
 
 
-class StorjEnv():
-
+class StorjEnv:
     def __init__(self,
-                 bridge_options,
-                 encrypt_options,
-                 http_options,
-                 log_options):
+                 path=None,
+                 **options_dict):
+        option_names = ('bridge_options',
+                        'encrypt_options',
+                        'http_options',
+                        'log_options')
 
-        options_list = (
-            (bridge_options, ext.BridgeOptions()),
-            (encrypt_options, ext.EncryptOptions()),
-            (http_options, ext.HttpOptions()),
-            (log_options, ext.LogOptions())
-        )
+        options_dict = options_dict or dict(zip(option_names, [None]*4))
+        option_types = (ext.BridgeOptions,
+                        ext.EncryptOptions,
+                        ext.HttpOptions,
+                        ext.LogOptions)
 
-        for option_pair in options_list:
-            (options, option_struct) = option_pair
-            for key, value in options.viewitems():
+        options_zip = zip(option_names, option_types)
+
+        if path is not None and os.path.exists(path):
+            options_dict.update(load_yaml_options(path))
+
+        options_list = [(options_dict[name], type_()) for name, type_ in options_zip]
+
+        for o_dict, o_struct in options_list:
+            for key, value in o_dict.iteritems():
                 if key == 'pass':
                     # NB: `pass` is a reserved attribute name; swig
                     #     knows this and has changed `pass` to `_pass`
                     key = '_pass'
-                setattr(option_struct, key, value)
+                setattr(o_struct, key, value)
 
         options = zip(*options_list)[1]
+
         self.env = ext.init_env(*options)
         self.env.loop = ext.set_loop(self.env)
 

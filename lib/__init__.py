@@ -1,2 +1,2 @@
 from .storj_env import StorjEnv
-from .storj_env import ext
+from .ext import python_libstorj as ext

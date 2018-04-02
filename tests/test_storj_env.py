@@ -1,10 +1,8 @@
-import sys, subprocess, yaml, re, unittest, time
+import sys, subprocess, re, unittest, yaml
 from os import path
 from datetime import datetime
-from lib.storj_env import StorjEnv
-from lib.ext import python_libstorj as pystorj
+from lib import StorjEnv
 sys.path.append('..')
-import ipdb
 
 
 class UtilityTestCase(unittest.TestCase):
@@ -40,10 +38,7 @@ class UtilityTestCase(unittest.TestCase):
 class TestStorjEnv(UtilityTestCase):
     def setUp(self):
         options_path = path.join(path.dirname(path.realpath(__file__)), 'options.yml')
-        with open(options_path, 'r') as options_file:
-            self.options = yaml.load(options_file.read())
-
-        self.env = StorjEnv(**self.options)
+        self.env = StorjEnv(path=options_path)
 
     def tearDown(self):
         self.env.destroy()
@@ -71,11 +66,10 @@ class TestStorjEnv(UtilityTestCase):
 class TestStorjEnvBadHost(UtilityTestCase):
     def setUp(self):
         options_path = path.join(path.dirname(path.realpath(__file__)), 'options.yml')
-        with open(options_path, 'r') as options_file:
-            self.options = yaml.load(options_file.read())
-            self.options['bridge_options']['host'] = 'nonexistant.example'
-
-        self.env = StorjEnv(**self.options)
+        with open(options_path, 'r') as o_file:
+            options = yaml.load(o_file.read())
+            options['bridge_options']['host'] = 'nonexistant.example'
+            self.env = StorjEnv(**options)
 
     def tearDown(self):
         self.env.destroy()
@@ -310,43 +304,43 @@ class TestListBucketsFailure(TestStorjEnvBadHost):
             self.fail('Callback not called!')
 
 
-# class TestDeleteFileSuccess(TestStorjEnv):
-#     def setUp(self):
-#         super(TestDeleteFileSuccess, self).setUp()
-#         bucket_name = 'python_libstorj-test_bucket7'
-#         # self.file_name = 'test.data'
-#         self.file_name = 'upload.data'
-#         self.bucket = self.env.create_bucket(bucket_name)
-#         self.upload_test_data(self.bucket['id'])
-#         self.file_id = self.get_file_id(self.bucket['id'], 'upload.data')
-#
-#     def tearDown(self):
-#         self.env.delete_bucket(self.bucket['id'])
-#         super(TestDeleteFileSuccess, self).tearDown()
-#
-#     def test_delete_file_without_callback_success(self):
-#         self.env.delete_file(self.bucket['id'], self.file_id)
-#         # NB: asserts no file with name: `bucket_name` exists
-#         file_iterator = self.get_file_iterator_match(self.bucket['id'], self.file_name)
-#         self.assertRaises(StopIteration, next, file_iterator)
-#
-#     def test_delete_file_with_callback_success(self):
-#         results = []
-#
-#         def callback(error):
-#             results.append(error)
-#
-#         self.env.delete_file(self.bucket['id'], self.file_id, callback)
-#         try:
-#             error = results[0]
-#             self.assertIsNone(error)
-#
-#             # NB: asserts no bucket with name: `bucket_name` exists
-#             # file_iterator = (f for f in self.env.list_files(self.bucket['id']) if re.search(r'%s' % self.file_name, f['filename']) is not None)
-#             file_iterator = self.get_file_iterator_match(self.bucket['id'], self.file_name)
-#             self.assertRaises(StopIteration, next, file_iterator)
-#         except IndexError:
-#             self.fail('Callback not called!')
+class TestDeleteFileSuccess(TestStorjEnv):
+    def setUp(self):
+        super(TestDeleteFileSuccess, self).setUp()
+        bucket_name = 'python_libstorj-test_bucket7'
+        # self.file_name = 'test.data'
+        self.file_name = 'upload.data'
+        self.bucket = self.env.create_bucket(bucket_name)
+        self.upload_test_data(self.bucket['id'])
+        self.file_id = self.get_file_id(self.bucket['id'], 'upload.data')
+
+    def tearDown(self):
+        self.env.delete_bucket(self.bucket['id'])
+        super(TestDeleteFileSuccess, self).tearDown()
+
+    def test_delete_file_without_callback_success(self):
+        self.env.delete_file(self.bucket['id'], self.file_id)
+        # NB: asserts no file with name: `bucket_name` exists
+        file_iterator = self.get_file_iterator_match(self.bucket['id'], self.file_name)
+        self.assertRaises(StopIteration, next, file_iterator)
+
+    def test_delete_file_with_callback_success(self):
+        results = []
+
+        def callback(error):
+            results.append(error)
+
+        self.env.delete_file(self.bucket['id'], self.file_id, callback)
+        try:
+            error = results[0]
+            self.assertIsNone(error)
+
+            # NB: asserts no bucket with name: `bucket_name` exists
+            # file_iterator = (f for f in self.env.list_files(self.bucket['id']) if re.search(r'%s' % self.file_name, f['filename']) is not None)
+            file_iterator = self.get_file_iterator_match(self.bucket['id'], self.file_name)
+            self.assertRaises(StopIteration, next, file_iterator)
+        except IndexError:
+            self.fail('Callback not called!')
 
 
 class TestDeleteFileFailure(TestStorjEnvBadHost):
@@ -511,6 +505,42 @@ class TestStoreFileFailure(TestStorjEnvBadHost):
                                      self.file_path,
                                      options=self.upload_options,
                                      finished_callback=callback)
+        try:
+            error, file_ = [results[k] for k in ('error', 'file')]
+            self.assertStatus7000Error(error)
+            self.assertEqual(file_, None)
+        except KeyError:
+            self.fail('Callback not called!')
+
+
+class TestResolveFileFailure(TestStorjEnvBadHost):
+    def setUp(self):
+        super(TestResolveFileFailure, self).setUp()
+        self.file_name = 'test.data'
+        self.file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
+        self.upload_options = {
+            'file_name': self.file_name
+        }
+        self.bucket = {'id': 'python_libstorj-test-4_id'}
+
+    def test_store_file_without_callback_failure(self):
+        self.assertRaisesWithStatus7000(self.env.store_file,
+                                        self.bucket['id'],
+                                        self.file_path,
+                                        options=self.upload_options)
+
+    def test_store_file_with_callback_failure(self):
+        results = {}
+
+        def callback(error, file_):
+            results['error'] = error
+            results['file'] = file_
+
+        self.assertRaisesWithStatus7000(self.env.store_file,
+                                        self.bucket['id'],
+                                        self.file_path,
+                                        options=self.upload_options,
+                                        finished_callback=callback)
         try:
             error, file_ = [results[k] for k in ('error', 'file')]
             self.assertStatus7000Error(error)
