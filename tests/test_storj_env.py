@@ -513,37 +513,29 @@ class TestStoreFileFailure(TestStorjEnvBadHost):
             self.fail('Callback not called!')
 
 
-class TestResolveFileFailure(TestStorjEnvBadHost):
-    def setUp(self):
-        super(TestResolveFileFailure, self).setUp()
-        self.file_name = 'test.data'
-        self.file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
-        self.upload_options = {
-            'file_name': self.file_name
-        }
-        self.bucket = {'id': 'python_libstorj-test-4_id'}
-
-    def test_store_file_without_callback_failure(self):
-        self.assertRaisesWithStatus7000(self.env.store_file,
-                                        self.bucket['id'],
-                                        self.file_path,
-                                        options=self.upload_options)
-
-    def test_store_file_with_callback_failure(self):
-        results = {}
-
-        def callback(error, file_):
-            results['error'] = error
-            results['file'] = file_
-
-        self.assertRaisesWithStatus7000(self.env.store_file,
-                                        self.bucket['id'],
-                                        self.file_path,
-                                        options=self.upload_options,
-                                        finished_callback=callback)
-        try:
-            error, file_ = [results[k] for k in ('error', 'file')]
-            self.assertStatus7000Error(error)
-            self.assertEqual(file_, None)
-        except KeyError:
-            self.fail('Callback not called!')
+# class TestResolveFileFailure(TestStorjEnvBadHost):
+#     def setUp(self):
+#         super(TestResolveFileFailure, self).setUp()
+#         self.bucket = {'id': 'python_libstorj-test-4_id'}
+#         self.file = {'id': 'test.data'}
+#
+#     def test_resolve_file_without_callback_failure(self):
+#         self.assertRaisesWithStatus7000(self.env.resolve_file,
+#                                         self.bucket['id'],
+#                                         self.file['id'])
+#
+#     def test_resolve_file_with_callback_failure(self):
+#         results = {}
+#
+#         def callback(error):
+#             results['error'] = error
+#
+#         self.assertRaisesWithStatus7000(self.env.resolve_file,
+#                                         self.bucket['id'],
+#                                         self.file['id'],
+#                                         finished_callback=callback)
+#         try:
+#             error, file_ = [results[k] for k in ('error', 'file')]
+#             self.assertStatus7000Error(error)
+#         except KeyError:
+#             self.fail('Callback not called!')

@@ -11,7 +11,7 @@ python_libstorj_module = Extension('_python_libstorj',
                                    )
 
 setup(name='python_libstorj',
-      version='0.1a',
+      version='1a',
       author="Bryan White",
       author_email="bryanchriswhite@gmail.com",
       url="https://github.com/storj/python-libstorj",
