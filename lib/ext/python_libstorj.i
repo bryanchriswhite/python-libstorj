@@ -20,6 +20,7 @@ int storj_mnemonic_generate(int strength, char **buffer);
 %rename(LogOptions) storj_log_options;
 %rename(BridgeOptions) storj_bridge_options_t;
 %rename(UploadState) storj_upload_state_t;
+%rename(DownloadState) storj_download_state;
 %rename(init_env) storj_init_env;
 %rename(destroy_env) storj_destroy_env;
 %rename(strerror) storj_strerror;
@@ -51,13 +52,11 @@ void delete_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObj
 void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
 %constant void list_files(storj_env_t *env, PyObject *py_bucket_id, PyObject *callback);
 
-//void store_file_progress_callback_cb(double progress, uint64_t bytes, uint64_t total_bytes, void *handle);
-//%constant void store_file_progress_callback_cb(double progress, uint64_t bytes, uint64_t total_bytes, void *handle);
-//
-//void store_file_finished_callback_cb(int error_status, char *file_id, void *handle);
-//%constant void store_file_finished_callback_cb(int error_status, char *file_id, void *handle);
-
 storj_upload_state_t* store_file(storj_env_t *env, storj_upload_opts_t *upload_options, PyObject *progress_callback, PyObject *finished_callback);
 %constant storj_upload_state_t* store_file(storj_env_t *env, storj_upload_opts_t *upload_options, PyObject *progress_callback, PyObject *finished_callback);
+
+storj_download_state_t* resolve_file(storj_env_t *env, PyObject *bucket_id, PyObject *file_id, PyObject *destination, PyObject *progress_callback, PyObject *finished_callback);
+%constant storj_download_state_t* resolve_file(storj_env_t *env, storj_upload_opts_t *upload_options, PyObject *progress_callback, PyObject *finished_callback);
+
 
 void run(uv_loop_t *loop);

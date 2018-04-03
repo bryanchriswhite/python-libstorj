@@ -1,5 +1,5 @@
 import sys, subprocess, re, unittest, yaml
-from os import path
+from os import path, remove
 from datetime import datetime
 from lib import StorjEnv
 sys.path.append('..')
@@ -513,29 +513,84 @@ class TestStoreFileFailure(TestStorjEnvBadHost):
             self.fail('Callback not called!')
 
 
+class TestResolveFileSuccess(TestStorjEnv):
+    def setUp(self):
+        super(TestResolveFileSuccess, self).setUp()
+        self.file_id_regex = re.compile('\w+', re.I)
+        self.file_name = 'test.data'
+        self.file_path = path.join(path.dirname(path.realpath(__file__)), 'upload.data')
+        self.upload_options = {
+            'file_name': self.file_name
+        }
+        self.destination_name = 'download.data'
+        self.destination_path = path.join(path.dirname(path.realpath(__file__)), self.destination_name)
+        if path.exists(self.destination_path):
+            remove(self.destination_path)
+        self.bucket = self.env.create_bucket('python_libstorj-test10')
+        self.file = self.env.store_file(self.bucket['id'],
+                                         self.file_path,
+                                         options=self.upload_options)
+
+    def tearDown(self):
+       self.env.delete_bucket(self.bucket['id'])
+       super(TestResolveFileSuccess, self).tearDown()
+
+    def test_resolve_file_without_callback_success(self):
+        self.env.resolve_file(self.bucket['id'],
+                              self.file['id'],
+                              self.file_path)
+        self.assertTrue(path.exists(self.destination_path))
+        # TODO: check file hash
+
+    def test_resolve_file_with_callback_success(self):
+        results = []
+
+        # TODO: ensure progress_callback is called as well
+        def callback(error):
+            results['error'] = error
+
+        self.env.resolve_file(self.bucket['id'],
+                            self.file['id'],
+                            self.destination_path,
+                            finished_callback=callback)
+
+        try:
+            error = results[0]
+            self.assertEqual(error, None)
+            self.assertTrue(path.exists(self.destination_path))
+            # TODO: check file hash
+        except(KeyError):
+            self.fail('Callback not called!')
+
+
+# TODO: does not error deterministically
 # class TestResolveFileFailure(TestStorjEnvBadHost):
 #     def setUp(self):
 #         super(TestResolveFileFailure, self).setUp()
+#         self.destination_name = 'download.data'
+#         self.destination_path = path.join(path.dirname(path.realpath(__file__)), self.destination_name)
 #         self.bucket = {'id': 'python_libstorj-test-4_id'}
 #         self.file = {'id': 'test.data'}
 #
 #     def test_resolve_file_without_callback_failure(self):
-#         self.assertRaisesWithStatus7000(self.env.resolve_file,
-#                                         self.bucket['id'],
-#                                         self.file['id'])
-#
-#     def test_resolve_file_with_callback_failure(self):
-#         results = {}
-#
-#         def callback(error):
-#             results['error'] = error
-#
-#         self.assertRaisesWithStatus7000(self.env.resolve_file,
+#         self.assertRaisesWithStatus1000(self.env.resolve_file,
 #                                         self.bucket['id'],
 #                                         self.file['id'],
+#                                         self.destination_path)
+#
+#     def test_resolve_file_with_callback_failure(self):
+#         results = []
+#
+#         def callback(error):
+#             results.append(error)
+#
+#         self.assertRaisesWithStatus1000(self.env.resolve_file,
+#                                         self.bucket['id'],
+#                                         self.file['id'],
+#                                         self.destination_path,
 #                                         finished_callback=callback)
 #         try:
-#             error, file_ = [results[k] for k in ('error', 'file')]
-#             self.assertStatus7000Error(error)
-#         except KeyError:
+#             error = results[0]
+#             self.assertStatus1000Error(error)
+#         except IndexError:
 #             self.fail('Callback not called!')

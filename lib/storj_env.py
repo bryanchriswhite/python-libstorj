@@ -227,3 +227,34 @@ class StorjEnv:
                        handle_finished)
         ext.run(self.env.loop)
         return self._error_check(results)
+
+    def resolve_file(self,
+                     bucket_id,
+                     file_id,
+                     path,
+                     progress_callback=None,
+                     finished_callback=None):
+        results = []
+
+        def handle_progress(progress, bytes, total_bytes):
+            if progress_callback is not None:
+                progress_callback(progress, bytes, total_bytes)
+
+        def handle_finished(error):
+            # TODO: error handling based on `status`
+
+            if error is not None:
+                error = Exception(error)
+                results.append(error)
+
+            if finished_callback is not None:
+                finished_callback(error)
+
+        ext.resolve_file(self.env,
+                         bucket_id,
+                         file_id,
+                         path,
+                         handle_progress,
+                         handle_finished)
+        ext.run(self.env.loop)
+        return self._error_check(results)

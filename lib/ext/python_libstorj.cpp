@@ -172,6 +172,18 @@ void store_file_progress_callback_cb(double progress,
     PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
 }
 
+void resolve_file_progress_callback_cb(double progress,
+                                     uint64_t bytes,
+                                     uint64_t total_bytes,
+                                     void *handle) {
+    PyObject *py_handle = (PyObject *)handle;
+    PyObject *py_progress_callback = Py_None;
+    PyObject *py_finished_callback = Py_None;
+    int parse_status = PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
+
+    PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
+}
+
 void store_file_finished_callback_cb(int error_status,
                                      storj_file_meta_t *file,
                                      void *handle) {
@@ -196,6 +208,25 @@ void store_file_finished_callback_cb(int error_status,
     }
 
     PyObject_CallFunction(py_finished_callback, "OO", error, file_dict);
+    Py_DECREF(py_progress_callback);
+    Py_DECREF(py_finished_callback);
+}
+
+void resolve_file_finished_callback_cb(int error_status,
+                                     FILE *fd,
+                                     void *handle) {
+    char *error_str = (char *)calloc(255, sizeof(char));
+    PyObject *py_handle = (PyObject *)handle;
+    PyObject *py_progress_callback = Py_None;
+    PyObject *py_finished_callback = Py_None;
+    PyObject *error = Py_None;
+    PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
+
+    if (!status_check(error_status, &error_str)) {
+        error = PyString_FromString(error_str);
+    }
+
+    PyObject_CallFunction(py_finished_callback, "O", error);
     Py_DECREF(py_progress_callback);
     Py_DECREF(py_finished_callback);
 }
@@ -256,6 +287,29 @@ storj_upload_state_t* store_file(storj_env_t *env,
                                              store_file_progress_callback_cb,
                                              store_file_finished_callback_cb);
     return upload_state;
+}
+
+storj_download_state_t* resolve_file(storj_env_t *env,
+                PyObject *bucket_id,
+                PyObject *file_id,
+                PyObject *destination_path,
+                PyObject *py_progress_callback,
+                PyObject *py_finished_callback) {
+    Py_INCREF(py_progress_callback);
+    Py_INCREF(py_finished_callback);
+    PyObject *py_handle = Py_BuildValue("(OO)", py_progress_callback, py_finished_callback);
+    void *handle = (void *)py_handle;
+    char *path = PyString_AsString(destination_path);
+    FILE *destination = fopen(path, "w+");
+    storj_download_state_t *download_state;
+    download_state = storj_bridge_resolve_file(env,
+                                             PyString_AsString(bucket_id),
+                                             PyString_AsString(file_id),
+                                             destination,
+                                             handle,
+                                             resolve_file_progress_callback_cb,
+                                             resolve_file_finished_callback_cb);
+    return download_state;
 }
 
 void run(uv_loop_t *loop) {
