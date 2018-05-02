@@ -12,5 +12,5 @@ http_options:
     low_speed_time: 20
     timeout: 60
 log_options:
-    level: 4
+    level: 0
 
