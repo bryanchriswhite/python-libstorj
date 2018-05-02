@@ -1,5 +1,5 @@
 import sys, subprocess, re, unittest, yaml
-from os import path, remove
+from os import path, remove, mkdir
 from datetime import datetime
 from lib import StorjEnv
 sys.path.append('..')
@@ -523,7 +523,11 @@ class TestResolveFileSuccess(TestStorjEnv):
             'file_name': self.file_name
         }
         self.destination_name = 'download.data'
-        self.destination_path = path.join(path.dirname(path.realpath(__file__)), self.destination_name)
+        home_path = path.expanduser('~')
+        download_dir = path.join(home_path, '.python-libstorj')
+        if not path.exists(download_dir):
+            mkdir(download_dir)
+        self.destination_path = path.join(download_dir, self.destination_name)
         if path.exists(self.destination_path):
             remove(self.destination_path)
         self.bucket = self.env.create_bucket('python_libstorj-test10')
@@ -538,7 +542,7 @@ class TestResolveFileSuccess(TestStorjEnv):
     def test_resolve_file_without_callback_success(self):
         self.env.resolve_file(self.bucket['id'],
                               self.file['id'],
-                              self.file_path)
+                              self.destination_path)
         self.assertTrue(path.exists(self.destination_path))
         # TODO: check file hash
 
@@ -547,7 +551,7 @@ class TestResolveFileSuccess(TestStorjEnv):
 
         # TODO: ensure progress_callback is called as well
         def callback(error):
-            results['error'] = error
+            results.append(error)
 
         self.env.resolve_file(self.bucket['id'],
                             self.file['id'],

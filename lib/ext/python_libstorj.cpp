@@ -169,7 +169,9 @@ void store_file_progress_callback_cb(double progress,
     PyObject *py_finished_callback = Py_None;
     int parse_status = PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
 
-    PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
+    if (py_finished_callback != Py_None) {
+        PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
+    }
 }
 
 void resolve_file_progress_callback_cb(double progress,
@@ -181,7 +183,9 @@ void resolve_file_progress_callback_cb(double progress,
     PyObject *py_finished_callback = Py_None;
     int parse_status = PyArg_ParseTuple(py_handle, "OO", &py_progress_callback, &py_finished_callback);
 
-    PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
+    if (py_finished_callback != Py_None) {
+        PyObject_CallFunction(py_progress_callback, "dII", progress, bytes, total_bytes);
+    }
 }
 
 void store_file_finished_callback_cb(int error_status,
@@ -207,7 +211,10 @@ void store_file_finished_callback_cb(int error_status,
         error = PyString_FromString(error_str);
     }
 
-    PyObject_CallFunction(py_finished_callback, "OO", error, file_dict);
+    if (py_finished_callback != Py_None) {
+        PyObject_CallFunction(py_finished_callback, "OO", error, file_dict);
+    }
+
     Py_DECREF(py_progress_callback);
     Py_DECREF(py_finished_callback);
 }
@@ -226,7 +233,10 @@ void resolve_file_finished_callback_cb(int error_status,
         error = PyString_FromString(error_str);
     }
 
-    PyObject_CallFunction(py_finished_callback, "O", error);
+    if (py_finished_callback != Py_None) {
+        PyObject_CallFunction(py_finished_callback, "O", error);
+    }
+
     Py_DECREF(py_progress_callback);
     Py_DECREF(py_finished_callback);
 }
