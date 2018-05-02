@@ -31,6 +31,8 @@ ENV LIBSTORJ_INCLUDE=$LIBSTORJ_INCLUDE
 
 # remove STORJ_BRIDGE export in .bashrc
 RUN sed -i '/export STORJ_BRIDGE.*/d' /root/.bashrc
+RUN sed -ri '/pm2 start -n \w+-([^1]|[0-9]{2,})/d' /root/scripts/start_everything.sh
+RUN sed -ri 's/totalRenters": \d+/totalRenters": 1/' /root/config/storj-complex/renter-1.json
 
 RUN ./setup_user.sh
 
