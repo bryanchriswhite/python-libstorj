@@ -10,6 +10,8 @@ COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
 RUN ls /python_libstorj/tests
 RUN cat /python_libstorj/tests/options.yml
+RUN storj get-info
+RUN storj ls
 RUN mkdir -p /python_libstorj/ext
 RUN ln -s /libstorj /python_libstorj/ext/libstorj
 
