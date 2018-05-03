@@ -8,6 +8,8 @@ COPY ./build.sh ./requirements.txt ./setup.py /python_libstorj/
 COPY ./dockerfiles/setup_user /python_libstorj/setup_user
 COPY ./lib /python_libstorj/lib
 COPY ./tests /python_libstorj/tests
+RUN ls /python_libstorj/tests
+RUN cat /python_libstorj/tests/options.yml
 RUN mkdir -p /python_libstorj/ext
 RUN ln -s /libstorj /python_libstorj/ext/libstorj
 
@@ -31,6 +33,7 @@ ENV LIBSTORJ_INCLUDE=$LIBSTORJ_INCLUDE
 
 # remove STORJ_BRIDGE export in .bashrc
 RUN sed -i '/export STORJ_BRIDGE.*/d' /root/.bashrc
+# reduce number of farmers and renters
 RUN sed -ri '/pm2 start -n \w+-([^1]|[0-9]{2,})/d' /root/scripts/start_everything.sh
 RUN sed -ri 's/totalRenters": \d+/totalRenters": 1/' /root/config/storj-complex/renter-1.json
 
